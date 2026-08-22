@@ -6,33 +6,18 @@ Agent instructions. For what this project is and why decisions were made, read `
 
 Streaming, history, document-length input, diff view. Multi-pair support is post-beta — don't build it early.
 
-## Commands
-
-Scripts do not exist yet (repo is pre-scaffold); create them exactly like this when scaffolding:
-
-```bash
-npm run dev        # Astro dev server at http://localhost:4321
-npm run build      # production build (static output)
-npm run preview    # preview production build
-npm run test       # vitest in watch mode
-npx vitest run     # single test pass
-npx tsc --noEmit   # typecheck without building
-```
-
-No lint/format scripts planned. Run `npx vitest run && npx tsc --noEmit` after every change.
-
-### post scaffolding
-
-After scaffolding, remove this section from the AGENTS.md file as every agent can just read package.json
-
-## Structure (planned)
+## Structure
 
 Single Astro app, **static output only**; one page mounts the main Svelte island. *Update this section after every change.*
 
-- `src/lib/translate.ts` — prompt builder + response parsing (pure functions; the vitest target)
-- `src/lib/provider.ts` — provider call (base URL + model + API key are user config)
-- `src/lib/storage.ts` — all IndexedDB access behind a small async API
-- `src/components/App.svelte`, `SetupModal.svelte` — the islands
+- `src/pages/index.astro` — the only page; mounts the App island with `client:load`
+- `src/components/App.svelte` — main Svelte island (placeholder counter until feature work)
+- `src/lib/toolchain.test.ts` — vitest smoke test (keeps watch mode alive while real tests don't exist)
+- `src/lib/translate.ts` — *planned*: prompt builder + response parsing (pure functions; the vitest target)
+- `src/lib/provider.ts` — *planned*: provider call (base URL + model + API key are user config)
+- `src/lib/storage.ts` — *planned*: all IndexedDB access behind a small async API
+- `src/components/SetupModal.svelte` — *planned*: setup modal island
+- Root configs: `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`
 
 ### Static-only rule
 
@@ -62,7 +47,7 @@ The page runs inside a plain iframe on start.me or as a standalone page.
 
 ## Testing
 
-vitest for pure logic only (prompt builder, detection/pair edge cases, storage serialization). Mock the provider boundary; no network calls in unit tests. Components have no coverage requirements.
+vitest for pure logic only (prompt builder, detection/pair edge cases, storage serialization). Mock the provider boundary; no network calls in unit tests. Components have no coverage requirements. Run `npx vitest run && npx tsc --noEmit` after every change.
 
 ## Workflow
 
