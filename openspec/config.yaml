@@ -1,13 +1,17 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Tech stack: Astro (static only) + Svelte 5 runes islands + TypeScript strict + vitest, plain CSS with custom properties.
+
+  Spec organization: capabilities (specs/) are stable domains named by what the system does. Changes are transient proposals whose delta specs target an existing capability path and merge back on archive. A change name MUST NOT match a capability name.
+
+  Capability map:
+  - config-storage: config schema, persistence, IndexedDB fallback
+  - setup: setup modal, provider + language pair config, validation
+  - translation: prompt builder, language detection, provider call (OpenAI-compatible, direct from browser), response parsing, result + direction display
+  - embedding: iframe / ?embed=1 mode, compact layout, postMessage
+  - presentation: theme, view transitions, easter egg
+  - project-scaffold: frozen meta capability, never touched again
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.

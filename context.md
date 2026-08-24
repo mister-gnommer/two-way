@@ -64,7 +64,7 @@ Confirmed: start.me's Embed Content widget is a **plain iframe** (their docs say
   but only within start.me). Safari/Brave may block IDB entirely → setup modal on every
   visit. Fallback plan: session-only key when storage throws. Test early in Safari-in-iframe.
 - Compact layout for small widget box; vertical setup with max width 300 px
-- consider `?embed=1` mode hiding settings chrome.
+- Support `?embed=1` mode hiding settings chrome.
 - Optional bonus: tiny `postMessage` API so host pages can prefill text / read results.
 
 ## Prompt design notes
@@ -100,10 +100,34 @@ Things to do differently:
 - Don't copy `performPolishRef.current = performPolish` during render (PolisherApp.tsx:261) — not idiomatic.
 - Easter egg tradition: keep something Cthulhu-class.
 
+## Roadmap
+
+Ordered, dependency-first. Each line is an Openspec **change**; its delta specs land in
+the listed capability (`openspec/specs/<capability>/`). The full capability map lives in
+`openspec/config.yaml` — change name ≠ capability name. Commit after planning, applying,
+and archiving each change (three commits per change).
+
+Done:
+
+- [x] `scaffold` → project-scaffold (frozen)
+- [x] `storage-layer` → config-storage
+
+Next, in order:
+
+- [ ] `translate-core` → translation — prompt builder + response parsing, detection edge cases (pure, vitest)
+- [ ] `provider-client` → translation — OpenAI-compatible browser call, JSON-schema mode, abort/race
+- [ ] `setup-modal` → setup — blocking modal, provider + pair, validation
+- [ ] `translate-ui` → translation — input, direction display, result, error toast
+- [ ] `embed-mode` → embedding — `?embed=1`, compact, hide chrome
+- [ ] `view-transitions` → presentation — direction-flip animation
+- [ ] `theme` → presentation — plain CSS custom properties
+- [ ] `easter-egg` → presentation — Cthulhu-class
+- [ ] `postmessage-api` → embedding — optional bonus (host prefill/read)
+
 ## Stack summary
 
 - Astro (static output only) + Svelte 5 islands + TypeScript
-- Plain CSS (polisher style) — TBD
+- Plain CSS with custom properties (no Tailwind, no CSS-in-JS)
 - Direct browser→provider calls, OpenAI-compatible endpoint config
 - IndexedDB for config, View Transitions API, vitest
 - Hosting: Vercel Hobby (same as polisher)
