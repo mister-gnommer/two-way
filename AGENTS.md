@@ -54,3 +54,5 @@ vitest for pure logic only (prompt builder, detection/pair edge cases, storage s
 ## Workflow
 
 Spec-first via Openspec (`openspec/`); implementation follows change proposals. Commit messages follow `CONTRIBUTING.md`. Semver tags. Vercel Hobby deploys on push to `main`. Keep an easter egg of Cthulhu-class magnitude somewhere in the UI.
+
+Commit cadence for Openspec changes: the agent SHALL propose committing after each significant step — after planning (artifacts complete), after applying/implementing (tasks complete), and after archiving. That's three commits per spec change; never batch steps into one commit.
