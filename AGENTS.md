@@ -11,11 +11,13 @@ Streaming, history, document-length input, diff view. Multi-pair support is post
 Single Astro app, **static output only**; one page mounts the main Svelte island. *Update this section after every change.*
 
 - `src/pages/index.astro` — the only page; mounts the App island with `client:load`
-- `src/components/App.svelte` — main Svelte island (placeholder counter until feature work)
+- `src/components/App.svelte` — main Svelte island (loads config via storage, shows loading/pair/none states; real UI comes with feature work)
+- `src/lib/types.ts` — `AppConfig` / `StoredRecord` shapes (provider + unordered language pair)
+- `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
+- `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
 - `src/lib/toolchain.test.ts` — vitest smoke test (keeps watch mode alive while real tests don't exist)
 - `src/lib/translate.ts` — *planned*: prompt builder + response parsing (pure functions; the vitest target)
 - `src/lib/provider.ts` — *planned*: provider call (base URL + model + API key are user config)
-- `src/lib/storage.ts` — *planned*: all IndexedDB access behind a small async API
 - `src/components/SetupModal.svelte` — *planned*: setup modal island
 - Root configs: `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`
 

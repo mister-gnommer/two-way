@@ -49,7 +49,7 @@ Flat and explicit. `pair.a` / `pair.b` are unordered — neither implies source 
 function createStorage(): Storage
 interface Storage {
   readonly loading: Writable<boolean>   // Svelte 5 rune-compatible reactive signal
-  readonly fallback: Writable<boolean>  // true when in-memory fallback is active
+  readonly inmemoryFallback: Writable<boolean>  // true when in-memory fallback is active
   load(): Promise<AppConfig | null>
   save(config: AppConfig): Promise<void>
 }
@@ -59,6 +59,8 @@ interface Storage {
 - `load()` reads from IDB (or session fallback), sets `loading` to `false` when done.
 - `save()` writes to IDB (or session fallback).
 - `inmemoryFallback` becomes `true` when IDB fails and the in-memory store takes over; stays `true` for the instance lifetime. UI can bind to this for a future warning banner.
+
+`openDb` / `readConfig` / `writeConfig` are also exported, but only so unit tests can exercise the IDB helpers directly (task 2.1). They are **not** part of the app-facing API — components should go through `createStorage()`. Doc comments mark them as internal.
 
 **Alternatives considered:** Singleton module with module-level state — rejected; factory pattern is testable and avoids shared mutable state between test cases.
 
@@ -70,7 +72,7 @@ On any IDB open/read/write error, catch, set the `inmemoryFallback` signal to `t
 
 ### Schema versioning
 
-Version 1 is the initial schema. Store as `{ _version: 1, ...config }`. On read, check `_version` — if missing or higher than current, treat as no config. Future migrations can add `onversionchange` handlers.
+Version 1 is the initial schema. Store as `{ _version: 1, ...config }`. On read, check `_version` — if missing or higher than current, treat as no config. A present-but-unreadable record (unknown version, corrupted shape) also logs a `console.warn` with the detected version — a genuine first visit (no record) stays silent, so the two are distinguishable in the console. The warn never includes record contents (the API key could be in there). Future migrations can add `onversionchange` handlers.
 
 **Alternatives considered:** `IDBDatabase.onupgradeneeded` with full migration logic — correct for future use, but premature now; the version check + null return is sufficient for v1.
 

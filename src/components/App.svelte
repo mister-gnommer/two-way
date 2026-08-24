@@ -1,6 +1,24 @@
 <script lang="ts">
-  let count = $state(0);
+  import { onMount } from 'svelte';
+  import { createStorage } from '../lib/storage';
+  import type { AppConfig } from '../lib/types';
+
+  const storage = createStorage();
+  const loading = storage.loading;
+  let config = $state<AppConfig | null>(null);
+
+  onMount(() => {
+    void storage.load().then((loaded) => {
+      config = loaded;
+    });
+  });
 </script>
 
 <h1>two-way</h1>
-<button onclick={() => count++}>count is {count}</button>
+{#if $loading}
+  <p>loading…</p>
+{:else if config}
+  <p>configured pair: {config.pair.a} ↔ {config.pair.b} ({config.provider.model})</p>
+{:else}
+  <p>no config yet</p>
+{/if}
