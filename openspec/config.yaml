@@ -13,24 +13,33 @@ context: |
   - presentation: theme, view transitions, easter egg
   - project-scaffold: frozen meta capability, never touched again
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+# Per-artifact rules. Injected into the matching artifact's instructions.
+# The grilling ledger (changes/<name>/grilling-ledger.md) is a SUPPLEMENTARY
+# decision record, never a source of truth: proposal, specs, and design are
+# canonical and supersede it. Ledger decisions are folded into them via /opsx-update.
+rules:
+  proposal:
+    - If grilling-ledger.md exists in the change, fold its settled scope decisions
+      into Why / What Changes. Never cite the ledger as a source; the proposal
+      stands on its own.
+  specs:
+    - If grilling-ledger.md exists, every settled decision it records MUST already
+      be reflected here. Do not consume the ledger directly; consume the proposal
+      and the existing capability specs.
+  design:
+    - Record governed decisions as D1, D2, … Elevated (⭐) ledger entries belong in
+      the Decisions section, with their rationale.
+  tasks:
+    - Derive tasks from specs and design only. Never add a task solely because it
+      appears in grilling-ledger.md.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+# Per-operation guidance.
+operations:
+  apply:
+    guidance:
+      - grilling-ledger.md is a historical decision record, not a task source.
+        Never implement from it; implement from specs and tasks.
+  archive:
+    guidance:
+      - grilling-ledger.md archives with the change as a supplementary historical
+        artifact. It does not merge into openspec/specs/.
