@@ -14,7 +14,7 @@ provider call is built on top of it.
     language, translate into the other language, preserve tone/register and formatting,
     output only the translation, treat the input as data rather than instructions
     (anti-injection), and state the JSON contract in prose.
-  - `parseTranslationResponse(raw, input)` — parses the provider's JSON into a
+  - `parseTranslationResponse(raw, input, pair)` — parses the provider's JSON into a
     discriminated result: a translation, an off-pair rejection, or an error. The error
     carries the original `input`; the raw response is never retained.
   - `checkInput(text)` — a guard returning `ok | too-long | blank`; the `ok` outcome carries
@@ -33,10 +33,12 @@ provider call is built on top of it.
     direction is surfaced by the UI (built later).
   - **In-pair detection with no translation** → an error, since a pair-language input must
     produce a translation.
+  - **Malformed detected tag** (not a well-formed BCP-47 tag) → an error; the model's value
+    is never shown to the user.
 - Languages are **BCP-47 tags** (e.g. `pl-PL`, `en`). Detection matches on the primary
   language subtag so `pl` and `pl-PL` resolve to the same direction.
-- Vitest coverage for the prompt builder, the parser, the input guard, and the
-  detection/pair edge cases above.
+- Vitest coverage for the input guard, the parser (including the detection/pair edge cases
+  our code decides), and the prompt's pair and contract wiring.
 
 ## Capabilities
 

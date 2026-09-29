@@ -67,9 +67,9 @@ Follow-up: threshold value, unit, and result kind → Q15/Q16.
 
 #### Q8 — Fence tolerance, exactly
 
-- ✅ **A — unwrap a single whole-string ```json/``` fence; otherwise parse as-is; no trailing-prose extraction.**
+- ↪ ~~A — unwrap a single whole-string ```json/``` fence; otherwise parse as-is; no trailing-prose extraction.~~ Superseded 2026-10-02 by C — see *Post-interview revisions*.
 - B — extract the first balanced `{…}` anywhere.
-- C — strict `JSON.parse` only.
+- ✅ **C — strict `JSON.parse` only.**
 
 #### Q9 — In-pair detection but empty/missing translation
 
@@ -188,3 +188,24 @@ Empty as of 2026-09-28. Interview complete; consolidate via `/opsx-update transl
   input, and the prompt is built from it (design **D11**).
 - ✅ **Fence-unwrapping test added** to task 4.2 (a fenced valid response parses
   identically), plus a new task 4.8 covering `und` → off-pair.
+
+### 2026-10-02 — code review
+
+- ↪ **Fence unwrapping dropped (Q8 A → C).** Fences only appear when a provider ignores
+  `response_format`; schema enforcement in `provider-client` is the real guard, so the
+  unwrapping was defensive code for a contract violation. The parser now calls `JSON.parse`
+  on the raw response, and a fenced response yields an `error`. See design **D6** and the
+  spec's *Fenced JSON is not unwrapped* scenario.
+- ✅ **Tests pruned to behaviour that can break.** Dropped tests that echoed constants
+  (schema flags, `MAX_INPUT_CHARS`), pinned prompt phrasing, or duplicated other cases
+  (fence/prose as invalid JSON; ambiguous and mixed input, which the parser never sees).
+  Prompt wording is deliberately not unit-tested — model-level testing is
+  [issue #2](https://github.com/mister-gnommer/two-way/issues/2). A new test couples the
+  prompt to `translationResponseSchema` field names and `"und"`. `tasks.md` verify clauses
+  updated to match.
+- ✅ **Detected tag shape-checked (verify finding).** `/opsx:verify` found the off-pair
+  path surfaced `detected_lang` unvalidated — model-supplied free text could reach
+  `detectedLang` and the rejection message, against D3. A `detected_lang` that is not a
+  well-formed BCP-47 tag now yields an error. See design **D14**, the spec's *Malformed
+  detected language* scenario, and task 4.9. Adding a `pattern` to
+  `translationResponseSchema` is left to `provider-client`.

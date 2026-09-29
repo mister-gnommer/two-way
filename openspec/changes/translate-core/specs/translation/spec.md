@@ -75,7 +75,7 @@ The system SHALL trim the input and reject, without building a prompt, input tha
 
 ### Requirement: Structured response contract
 
-The translation response SHALL be a JSON object with `detected_lang` (a BCP-47 language tag) and `translation` (the translated string, or null when the input is outside the pair). Both fields SHALL be required and additional properties SHALL NOT be allowed. The contract SHALL be exposed as a JSON schema usable by the provider call.
+The translation response SHALL be a JSON object with `detected_lang` (a well-formed BCP-47 language tag) and `translation` (the translated string, or null when the input is outside the pair). Both fields SHALL be required and additional properties SHALL NOT be allowed. The contract SHALL be exposed as a JSON schema usable by the provider call.
 
 #### Scenario: Contract describes both required fields
 
@@ -147,7 +147,7 @@ For input that mixes both languages of the pair, the system SHALL NOT apply a fi
 
 ### Requirement: Malformed provider responses do not throw
 
-The parser SHALL return an error result, rather than throw, when the provider response is not valid according to the contract. An error result SHALL retain the original input text and SHALL NOT retain the raw provider response. A response wrapped in a single Markdown code fence SHALL be unwrapped before parsing; no other extraction is attempted.
+The parser SHALL return an error result, rather than throw, when the provider response is not valid according to the contract. An error result SHALL retain the original input text and SHALL NOT retain the raw provider response. The raw response SHALL be parsed as-is; no extraction from Markdown code fences or surrounding prose is attempted. A `detected_lang` that is not a well-formed BCP-47 tag SHALL yield an error result, and the reported value SHALL NOT be surfaced.
 
 #### Scenario: Invalid JSON
 
@@ -164,13 +164,19 @@ The parser SHALL return an error result, rather than throw, when the provider re
 - **WHEN** the detected language is a pair member but the translation is null or empty
 - **THEN** the result is an error outcome carrying a message, returned rather than thrown
 
-#### Scenario: Fenced JSON is unwrapped
+#### Scenario: Fenced JSON is not unwrapped
 
-- **WHEN** the raw response is a single fenced code block containing valid JSON
-- **THEN** the response parses as if the fence were absent
+- **WHEN** the raw response is valid JSON wrapped in a Markdown code fence
+- **THEN** the result is an error outcome carrying a message, returned rather than thrown
 
 #### Scenario: Error retains the request, not the response
 
 - **WHEN** an error result is produced
 - **THEN** it carries the original input text
 - **AND** it does not carry the raw provider response
+
+#### Scenario: Malformed detected language
+
+- **WHEN** the response's `detected_lang` is not a well-formed BCP-47 tag (e.g. free text)
+- **THEN** the result is an error outcome carrying a message, returned rather than thrown
+- **AND** the reported value appears in neither the result nor its message
