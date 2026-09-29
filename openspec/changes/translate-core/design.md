@@ -44,7 +44,8 @@ tag is regional. Alternative (exact string match) rejected — it would reject v
 detections like `pl` against a `pl-PL` config.
 
 **D3 — Discriminated-union result, never throw.** The parser
-`parseTranslationResponse(raw, input)` returns
+`parseTranslationResponse(raw, input, pair)` — the pair is needed to resolve the detected
+tag to a direction — returns
 `{ kind: 'translation', source, target, translation }`
 | `{ kind: 'off-pair', detectedLang, message }`
 | `{ kind: 'error', message, input }`.

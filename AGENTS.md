@@ -15,8 +15,9 @@ Single Astro app, **static output only**; one page mounts the main Svelte island
 - `src/lib/types.ts` — `AppConfig` / `StoredRecord` shapes (provider + unordered language pair)
 - `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
 - `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
-- `src/lib/toolchain.test.ts` — vitest smoke test (keeps watch mode alive while real tests don't exist)
-- `src/lib/translate.ts` — *planned*: prompt builder + response parsing (pure functions; the vitest target)
+- `src/lib/toolchain.test.ts` — vitest smoke test
+- `src/lib/translate.ts` — translation contract: prompt builder, input guard, response parser (pure functions)
+- `src/lib/translate.test.ts` — translation unit tests (prompt, guard, parser, pair/detection edge cases)
 - `src/lib/provider.ts` — *planned*: provider call (base URL + model + API key are user config)
 - `src/components/SetupModal.svelte` — *planned*: setup modal island
 - Root configs: `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`

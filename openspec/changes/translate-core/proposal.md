@@ -14,7 +14,7 @@ provider call is built on top of it.
     language, translate into the other language, preserve tone/register and formatting,
     output only the translation, treat the input as data rather than instructions
     (anti-injection), and state the JSON contract in prose.
-  - `parseTranslationResponse(raw, input)` — parses the provider's JSON into a
+  - `parseTranslationResponse(raw, input, pair)` — parses the provider's JSON into a
     discriminated result: a translation, an off-pair rejection, or an error. The error
     carries the original `input`; the raw response is never retained.
   - `checkInput(text)` — a guard returning `ok | too-long | blank`; the `ok` outcome carries
