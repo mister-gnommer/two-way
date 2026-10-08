@@ -111,17 +111,15 @@ Done:
 
 - [x] `scaffold` → project-scaffold (frozen)
 - [x] `storage-layer` → config-storage
+- [x] `translate-core` → translation
 
 Next, in order:
 
-- [ ] `translate-core` → translation — prompt builder + response parsing, detection edge cases (pure, vitest)
 - [ ] `provider-client` → translation — OpenAI-compatible browser call, JSON-schema mode, abort/race
 - [ ] `setup-modal` → setup — blocking modal, provider + pair, validation
 - [ ] `translate-ui` → translation — input, direction display, result, error toast
 - [ ] `embed-mode` → embedding — `?embed=1`, compact, hide chrome
-- [ ] `view-transitions` → presentation — direction-flip animation
-- [ ] `theme` → presentation — plain CSS custom properties
-- [ ] `easter-egg` → presentation — Cthulhu-class
+- [ ] `presentation` → presentation — theme (plain CSS custom properties), direction-flip view transition, Cthulhu-class easter egg
 - [ ] `postmessage-api` → embedding — optional bonus (host prefill/read)
 
 ## Stack summary
