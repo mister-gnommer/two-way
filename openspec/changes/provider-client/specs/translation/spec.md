@@ -107,12 +107,18 @@ Each translation SHALL be abandoned 30 seconds after it starts, including any te
 
 ### Requirement: Provider failures map to fixed messages
 
-Provider and network failures SHALL resolve as error results whose messages are our own fixed copy, chosen by failure class: rejected credentials (401/403), unknown endpoint or model (404), rate limit (429), provider-side failure (5xx), other HTTP status, and unreachable provider (network failure, including CORS). The provider's error body MAY be read to classify the failure but SHALL NOT appear in any result.
+Provider and network failures SHALL resolve as error results whose messages are our own fixed copy, chosen by failure class: rejected credentials (401), refused access (403), unknown endpoint or model (404), rate limit (429), provider-side failure (5xx), other HTTP status, and unreachable provider (network failure, including CORS). The provider's error body MAY be read to classify the failure but SHALL NOT appear in any result.
 
 #### Scenario: Rejected API key
 
-- **WHEN** the provider answers 401 or 403
+- **WHEN** the provider answers 401
 - **THEN** the result is an error saying the API key was rejected
+
+#### Scenario: Access refused
+
+- **WHEN** the provider answers 403
+- **THEN** the result is an error saying the request was refused
+- **AND** it names the API key and access to the model as likely causes
 
 #### Scenario: Unknown endpoint or model
 
@@ -175,7 +181,7 @@ A translation call SHALL always resolve with an outcome and SHALL never reject o
 
 ### Requirement: API key is confined to the authorization header
 
-The API key SHALL be sent only as a bearer token in the `Authorization` header of requests to the configured base URL. It SHALL NOT appear in the URL, in any result or message, or in console output. Requests SHALL send no cookies or referrer.
+The API key SHALL be sent only as a bearer token in the `Authorization` header of requests to the configured base URL. It SHALL NOT appear in the URL, in any result or message, or in console output. Requests SHALL send no cookies or referrer. A key that cannot be sent as a header value (e.g. it contains a line break or a non-Latin-1 character) SHALL resolve as an error stating that the key contains invalid characters, without contacting the provider.
 
 #### Scenario: Key is sent as a bearer token
 
@@ -192,3 +198,10 @@ The API key SHALL be sent only as a bearer token in the `Authorization` header o
 
 - **WHEN** a request is sent
 - **THEN** it omits cookies and the referrer
+
+#### Scenario: Key that cannot be sent as a header
+
+- **WHEN** a translation is requested with an API key containing a line break
+- **THEN** the result is an error saying the key contains invalid characters
+- **AND** no request is sent
+- **AND** the result does not contain the key

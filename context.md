@@ -112,10 +112,10 @@ Done:
 - [x] `scaffold` → project-scaffold (frozen)
 - [x] `storage-layer` → config-storage
 - [x] `translate-core` → translation
+- [x] `provider-client` → translation
 
 Next, in order:
 
-- [ ] `provider-client` → translation — OpenAI-compatible browser call, JSON-schema mode, abort/race
 - [ ] `setup-modal` → setup — blocking modal, provider + pair, validation
 - [ ] `translate-ui` → translation — input, direction display, result, error toast
 - [ ] `embed-mode` → embedding — `?embed=1`, compact, hide chrome

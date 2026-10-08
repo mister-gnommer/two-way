@@ -83,6 +83,11 @@ bounded at 500 chars anyway.
 `credentials: 'omit'`, `referrerPolicy: 'no-referrer'`, and `cache: 'no-store'`. The module
 has no `console.*` calls. *Why:* the key travels only where the user pointed it, and no
 cookies or page URL leak to a third party. `mode` stays the default `cors`.
+The headers are built with `new Headers(...)` in their own try/catch before `fetch`. The
+key is the only variable header value, so a throw there means the key is bad (a line break
+or a non-Latin-1 character, e.g. from a password manager). It maps to an invalid-key error
+and no request is sent. *Why:* otherwise the `TypeError` lands in the `fetch` catch and
+reads as "unreachable / CORS".
 
 **D9: 400s are classified from the error body without surfacing it.** On a non-2xx
 response, the client reads the body as text, tries `JSON.parse`, and narrows it to
@@ -106,7 +111,9 @@ persisted. *Why:* without the memo, every translation on a reasoning model pays 
 round trips. Persisting it would change `AppConfig`/storage, which is out of scope, and
 relearning once per page load is cheap.
 
-**D11: Status classes map to fixed copy.** 401/403 means the key was rejected, 404 means
+**D11: Status classes map to fixed copy.** 401 means the key was rejected. 403 gets its own
+"request refused" message naming the key and model access, because it also covers
+OpenRouter's moderation flag, a key without access to the model, and regional blocks. 404 means
 the base URL or model was not found, 429 means rate limited (try again shortly), 5xx means
 the provider failed, any other status gets a generic message with the status code, and a
 `fetch` rejection that is not an abort means the provider could not be reached (check the
@@ -144,6 +151,9 @@ console output.
 - [The key sits in page memory and IDB] → This comes with BYOK and cannot be avoided in
   the browser. Mitigation is that the key is never logged, never put in URLs, and only
   sent to the user-chosen origin.
+- [An `http://` base URL would send the key unencrypted] → On the deployed HTTPS page the
+  browser blocks it as mixed content. Under `astro dev` (`http://localhost`) nothing does.
+  `setup-modal` MUST require `https://` except for `localhost` / `127.0.0.1`.
 - [Refusal handling follows OpenAI's `message.refusal`] → Other providers that refuse in
   prose produce content that fails the strict parser, which is still an error and never a
   false translation.

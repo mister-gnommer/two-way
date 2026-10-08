@@ -2,7 +2,8 @@
 
 ## current work
 
-- plan `provider-client` (deep-read: API key handling, CORS, abort/race)
+- archive `provider-client`, then plan `setup-modal`
+- setup-modal: require https base URL except localhost/127.0.0.1 (key would leak unencrypted under `astro dev`)
 
 ## polish pass (end of project)
 

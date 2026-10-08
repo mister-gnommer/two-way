@@ -18,7 +18,8 @@ Single Astro app, **static output only**; one page mounts the main Svelte island
 - `src/lib/toolchain.test.ts` — vitest smoke test
 - `src/lib/translate.ts` — translation contract: prompt builder, input guard, response parser (pure functions)
 - `src/lib/translate.test.ts` — translation unit tests (prompt, guard, parser, pair/detection edge cases)
-- `src/lib/provider.ts` — *planned*: provider call (base URL + model + API key are user config)
+- `src/lib/provider.ts` — provider call: latest-wins `createTranslator()` over OpenAI-compatible Chat Completions (strict json_schema, temperature retry, timeout, fixed error copy)
+- `src/lib/provider.test.ts` — provider unit tests (injected fetch stub, no network)
 - `src/components/SetupModal.svelte` — *planned*: setup modal island
 - Root configs: `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`
 

@@ -30,14 +30,15 @@ on top.
 - **Never throws.** Every outcome is a returned value: translation, off-pair, guard
   rejection, error, or aborted. Error results keep the original input so the UI never
   loses it.
-- **Status-mapped errors.** 401/403 (key), 404 (base URL / model), 429 (rate limit),
-  5xx (provider down), network failure (unreachable or CORS-blocked), timeout, refusal,
-  and malformed reply each get a fixed message written by us. Provider error bodies are
+- **Status-mapped errors.** 401 (key), 403 (refused: key or model access), 404 (base
+  URL / model), 429 (rate limit), 5xx (provider down), network failure (unreachable or
+  CORS-blocked), timeout, refusal, and malformed reply each get a fixed message written by us. Provider error bodies are
   read only to classify the error and are never shown to the user, because some providers
   echo part of the key in them.
 - **API key hygiene.** The key goes only in the `Authorization` header to the configured
   base URL. It never appears in URLs, results, messages, or logs. Requests send no
-  cookies and no referrer.
+  cookies and no referrer. A key that can't be sent as a header is reported as invalid,
+  with no request.
 - **Timeout**: 30 s per request, reported as an error (not as `aborted`).
 - Vitest coverage with an injected `fetch` stub and no network calls.
 
@@ -64,7 +65,8 @@ None.
   `pair`) and everything exported by `translate.ts`. Neither file changes.
 - **Feeds**: `setup-modal` (a test call to validate config) and `translate-ui` (renders
   results). Neither is built here.
-- **Not in scope**: base URL / key validation in the form (`setup`), a server proxy
+- **Not in scope**: base URL / key validation in the form, including requiring
+  `https://` base URLs except localhost (`setup`), a server proxy
   (the static-only rule stands, and CORS-blocking providers just get the network error
   message), retries on 429/5xx, streaming.
 - **No dependency changes**.
