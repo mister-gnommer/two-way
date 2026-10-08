@@ -2,3 +2,4 @@
 - `e277aa09-b385-4b81-82f7-2dd88eb2cfc8` — 2026-09-29 — translate-core: which artifacts to review before implementation
 - `57091c60-e94b-42a8-aef9-89f2fb4ff8c6` — 2026-10-02 — why opsx slash commands are not visible in Claude Code
 - `ac023501-3642-4df3-8b4f-ddb31550852b` — 2026-10-08 — whether to drop openspec/SDD and vibecode the rest
+- `7541c6b7-10aa-43c6-999d-2fe728a1aa55` — 2026-10-08 — openspec propose provider-client (OpenAI-compatible browser call, JSON-schema mode, abort/race)
