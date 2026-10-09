@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>Two-way arrow icon</title>
+  <defs>
+    <linearGradient id="ivory" x1="110" y1="314" x2="512" y2="710" gradientUnits="userSpaceOnUse"><stop stop-color="#f5f2ec"/><stop offset="1" stop-color="#f0ede7"/></linearGradient>
+    <linearGradient id="teal" x1="512" y1="390" x2="912" y2="655" gradientUnits="userSpaceOnUse"><stop stop-color="#31aa9f"/><stop offset="1" stop-color="#2ca99d"/></linearGradient>
+  </defs>
+  <g>
+    <path fill="url(#ivory)" d="M512 390.5H305V328C305 314 290 309 280 319L117 497Q105 510 117 524L281 703C291 715 305 711 305 697V654.5H512Z"/>
+    <path fill="url(#teal)" d="M512 390.5H719V328C719 314 734 309 744 319L906 497Q920 510 906 524L743 703C733 715 719 711 719 697V654.5H512Z"/>
+  </g>
+  <g fill="#181818"><rect x="249" y="455" width="221" height="25" rx="12.5"/><rect x="281" y="520" width="189" height="25" rx="12.5"/><rect x="368" y="578" width="102" height="25" rx="12.5"/><rect x="553.5" y="455" width="221.5" height="25" rx="12.5"/><rect x="553.5" y="520" width="189.5" height="25" rx="12.5"/><rect x="553.5" y="578" width="102" height="25" rx="12.5"/></g>
+</svg>

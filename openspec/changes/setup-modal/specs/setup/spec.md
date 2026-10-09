@@ -62,6 +62,45 @@ The setup form SHALL collect the provider base URL, the model name, the API key,
 - **THEN** the API key field hides its value
 - **AND** a control lets the user reveal it
 
+### Requirement: The modal explains the app
+
+The setup modal SHALL show a short introduction below its heading that says what the app does and that the API key stays in the browser and is sent only to the configured provider.
+
+#### Scenario: Intro is shown in both modes
+
+- **WHEN** the modal opens on first run or from the settings
+- **THEN** the introduction is shown below the heading
+
+### Requirement: The first-run form is prefilled
+
+When no configuration is saved, the form SHALL prefill the base URL with `https://api.openai.com/v1` and the model with `gpt-4o-mini`, leaving the API key and both languages empty. When a configuration is saved, the form SHALL show the saved values instead.
+
+#### Scenario: First run shows the defaults
+
+- **WHEN** the modal opens with no saved configuration
+- **THEN** the base URL field contains `https://api.openai.com/v1` and the model field contains `gpt-4o-mini`
+- **AND** the API key and both languages are empty
+
+#### Scenario: Settings show the saved values
+
+- **WHEN** the modal opens from the settings
+- **THEN** every field shows the saved value, not the defaults
+
+### Requirement: Prefilled fields can be cleared in one action
+
+The base URL and model fields SHALL each offer a clear control while they are non-empty. Using it SHALL empty the field, move focus to it, and clear that field's error and any shown test result.
+
+#### Scenario: Clearing a field
+
+- **WHEN** the base URL field is non-empty and the user activates its clear control
+- **THEN** the field is empty and focused
+- **AND** its error and any test result are cleared
+
+#### Scenario: Empty field has no clear control
+
+- **WHEN** the model field is empty
+- **THEN** it shows no clear control
+
 ### Requirement: Text fields are trimmed and required
 
 The system SHALL trim the base URL, model, and API key before validating and saving them, and SHALL reject any of them that is empty after trimming.
@@ -79,7 +118,7 @@ The system SHALL trim the base URL, model, and API key before validating and sav
 
 ### Requirement: Base URL must be a secure absolute URL
 
-The base URL SHALL be an absolute URL using `https:`, except that `http:` SHALL be accepted for the loopback hosts `localhost`, `127.0.0.1`, and `[::1]`. A base URL containing credentials, a query, or a fragment SHALL be rejected.
+The base URL SHALL be an absolute URL using `https:`, except that `http:` SHALL be accepted for the loopback hosts `localhost`, `127.0.0.1`, and `[::1]`. A base URL containing credentials, a query, or a fragment, including a bare `?` or `#` with nothing after it, SHALL be rejected.
 
 #### Scenario: HTTPS URL is accepted
 
@@ -101,6 +140,30 @@ The base URL SHALL be an absolute URL using `https:`, except that `http:` SHALL 
 
 - **WHEN** the base URL is not an absolute URL, or contains credentials, a query, or a fragment
 - **THEN** the form shows a base URL error
+
+#### Scenario: Bare query or fragment marker is rejected
+
+- **WHEN** the base URL is `https://host/v1?` or `https://host/v1#`
+- **THEN** the form shows a base URL error
+
+### Requirement: A base URL without a scheme defaults to HTTPS
+
+When the trimmed base URL has no `scheme://` prefix, the system SHALL prepend `https://` before validating and saving it, and SHALL show the completed URL in the field once the field loses focus. An explicit `http://` to a non-loopback host SHALL still be rejected, not upgraded.
+
+#### Scenario: Missing scheme is completed on blur
+
+- **WHEN** the user enters `api.openai.com/v1` and leaves the field
+- **THEN** the field shows `https://api.openai.com/v1`
+
+#### Scenario: Saving without leaving the field
+
+- **WHEN** the user types `api.openai.com/v1` and saves straight away
+- **THEN** the saved base URL is `https://api.openai.com/v1`
+
+#### Scenario: Loopback without a scheme gets HTTPS too
+
+- **WHEN** the base URL is `localhost:11434/v1`
+- **THEN** it is completed to `https://localhost:11434/v1`
 
 ### Requirement: API key is limited to visible ASCII
 
@@ -138,6 +201,22 @@ Each pair language SHALL be chosen from a fixed list of common languages, identi
 - **THEN** the reopened modal shows `pl-PL` as the selected first language
 - **AND** saving without changing it keeps `pl-PL`
 
+### Requirement: Language choices are ordered and prompt for a selection
+
+Both language lists SHALL start with Polish and then English, followed by the remaining languages ordered by name. A language field with no selection SHALL show a prompt that cannot itself be chosen as a language.
+
+#### Scenario: Polish and English lead the list
+
+- **WHEN** a language list is opened
+- **THEN** its first two languages are Polish and English, in that order
+- **AND** the remaining languages follow ordered by name
+
+#### Scenario: Unchosen language shows a prompt
+
+- **WHEN** a language field has no selection
+- **THEN** it shows a "Select…" prompt
+- **AND** the prompt cannot be chosen as a value
+
 ### Requirement: Validation errors are shown per field
 
 When the user saves or tests an invalid form, the system SHALL show each error next to the field it concerns and SHALL NOT save or send anything.
@@ -147,6 +226,12 @@ When the user saves or tests an invalid form, the system SHALL show each error n
 - **WHEN** the base URL is plain HTTP to a remote host and the model is empty
 - **THEN** both fields show their own error
 - **AND** no configuration is saved and no request is sent
+
+#### Scenario: Editing a field clears its error
+
+- **WHEN** a field shows an error and the user edits that field
+- **THEN** that field's error is cleared, and errors on other fields stay
+- **AND** editing either language clears the pair error
 
 ### Requirement: Valid configuration is saved without a test
 
@@ -193,6 +278,12 @@ The modal SHALL offer a test control that validates the form and then sends one 
 
 - **WHEN** the modal is saved or cancelled while a test is in flight
 - **THEN** the test request is cancelled and its result is never shown
+
+#### Scenario: Editing during a test cancels it
+
+- **WHEN** a test request is in flight and the user changes any field
+- **THEN** the request is cancelled
+- **AND** its result is never shown
 
 ### Requirement: Session-only storage is disclosed
 

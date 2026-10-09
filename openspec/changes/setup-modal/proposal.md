@@ -13,6 +13,10 @@ subtag (otherwise detection can't pick a direction).
 - Add `src/components/SetupModal.svelte`, a native `<dialog>` modal with a vertical form
   that is at most 300 px wide. It has base URL, model, API key (masked, with a show toggle),
   and two language dropdowns side by side with the two-way arrow icon between them.
+  A short italic intro under the heading says what the app does and where the key goes.
+  On first run the base URL and model are prefilled with OpenAI defaults
+  (`https://api.openai.com/v1`, `gpt-4o-mini`), and both fields have a "×" button that
+  clears them.
 - **Blocking on first run.** After the config load settles to `null`, the modal opens and
   cannot be dismissed until a valid config is saved. It never opens while config is still
   loading.
@@ -23,7 +27,8 @@ subtag (otherwise detection can't pick a direction).
   - All fields are trimmed and required.
   - The base URL must be `https://`, except loopback hosts (`localhost`, `127.0.0.1`,
     `[::1]`), which may use `http://`. It must not contain credentials, a query, or a
-    fragment.
+    fragment. A base URL typed without a scheme gets `https://` prepended, and the field
+    shows the completed URL once it loses focus.
   - The API key may contain only visible ASCII, which catches pasted whitespace and
     smart quotes.
   - The two languages must differ.
@@ -32,7 +37,8 @@ subtag (otherwise detection can't pick a direction).
   stored as primary-language BCP-47 tags (`pl`, `en`, `de`, …) and labelled with
   `Intl.DisplayNames`. Two different entries always differ in primary subtag. A stored tag
   that is not in the list stays selectable, so reopening and saving never silently changes
-  the pair.
+  the pair. Polish and English come first, then the rest by name. An unchosen dropdown
+  shows a "Select…" prompt that cannot be picked from the list.
 - **Optional Test button.** It runs one real translation with the current form values
   through `createTranslator`. Any provider answer (translation or off-pair) counts as
   success. Otherwise the provider client's fixed error message is shown. Saving does not

@@ -11,7 +11,7 @@ Streaming, history, document-length input, diff view. Multi-pair support is post
 Single Astro app, **static output only**; one page mounts the main Svelte island. *Update this section after every change.*
 
 - `src/pages/index.astro` — the only page; mounts the App island with `client:load`
-- `src/components/App.svelte` — main Svelte island (loads config via storage, shows loading/pair/none states; real UI comes with feature work)
+- `src/components/App.svelte` — main Svelte island (loads config via storage; loading/configured states; opens the setup modal — blocking while unconfigured, via Settings once configured)
 - `src/lib/types.ts` — `AppConfig` / `StoredRecord` shapes (provider + unordered language pair)
 - `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
 - `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
@@ -20,7 +20,9 @@ Single Astro app, **static output only**; one page mounts the main Svelte island
 - `src/lib/translate.test.ts` — translation unit tests (prompt, guard, parser, pair/detection edge cases)
 - `src/lib/provider.ts` — provider call: latest-wins `createTranslator()` over OpenAI-compatible Chat Completions (strict json_schema, temperature retry, timeout, fixed error copy)
 - `src/lib/provider.test.ts` — provider unit tests (injected fetch stub, no network)
-- `src/components/SetupModal.svelte` — *planned*: setup modal island
+- `src/lib/setup.ts` — setup validation: `validateSetup` (trim/required, `completeBaseUrl` https:// completion, https-or-loopback base URL, visible-ASCII key, distinct pair), `DEFAULT_PROVIDER` first-run prefills, the curated `LANGUAGES` list and `languageOptions` (Polish, English first)
+- `src/lib/setup.test.ts` — setup validation unit tests (form rules, URL/key rejection, language list invariants)
+- `src/components/SetupModal.svelte` — setup modal island: native `<dialog>` form for provider + language pair; blocking on first run, reopenable from Settings; validates, optionally tests through `createTranslator`, saves via `onsave`
 - Root configs: `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`
 
 ### Static-only rule
