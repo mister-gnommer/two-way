@@ -2,7 +2,7 @@
 
 ## current work
 
-- implement `translate-ui`
+- plan `embed-mode`
 
 ## follow-ups (small changes, before beta)
 

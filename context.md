@@ -114,10 +114,10 @@ Done:
 - [x] `translate-core` → translation
 - [x] `provider-client` → translation
 - [x] `setup-modal` → setup
+- [x] `translate-ui` → translation
 
 Next, in order:
 
-- [ ] `translate-ui` → translation — input, direction display, result, error toast
 - [ ] `embed-mode` → embedding — `?embed=1`, compact, hide chrome
 - [ ] `presentation` → presentation — theme (plain CSS custom properties), direction-flip view transition, Cthulhu-class easter egg
 - [ ] `postmessage-api` → embedding — optional bonus (host prefill/read)
