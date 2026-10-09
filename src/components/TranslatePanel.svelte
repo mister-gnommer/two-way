@@ -7,9 +7,11 @@
   interface Props {
     /** The saved config every translation uses; a new object means settings were saved. */
     config: AppConfig;
+    /** Embed layout: full width, label shown as a placeholder, a shorter input (embed-mode D4). */
+    compact?: boolean;
   }
 
-  let { config }: Props = $props();
+  let { config, compact = false }: Props = $props();
 
   type CopyState = 'idle' | 'copied' | 'manual';
 
@@ -146,7 +148,7 @@
   }
 </script>
 
-<section class="panel" aria-label="Translator">
+<section class="panel" class:compact aria-label="Translator">
   <p class="pair" title={pair.name}>
     <span aria-hidden="true">{pair.text}</span>
     <span class="visually-hidden">{pair.name}</span>
@@ -159,11 +161,12 @@
       void handleSubmit();
     }}
   >
-    <label for="translate-input">Text to translate</label>
+    <label for="translate-input" class:visually-hidden={compact}>Text to translate</label>
     <div class="input-row">
       <textarea
         id="translate-input"
-        rows="3"
+        rows={compact ? 2 : 3}
+        placeholder={compact ? 'Text to translate' : undefined}
         autocomplete="off"
         spellcheck="false"
         bind:this={inputEl}
@@ -213,6 +216,13 @@
     flex-direction: column;
     gap: 12px;
     max-width: 300px;
+  }
+  .panel.compact {
+    max-width: none;
+  }
+  /* Room for App's corner Settings gear, which is shown only in the compact layout. */
+  .compact .pair {
+    padding-right: 32px;
   }
   p {
     margin: 0;

@@ -10,6 +10,22 @@ import App from '../components/App.svelte';
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>two-way</title>
+		<!-- Synchronous so the compact layout applies to the first paint (embed-mode D1). -->
+		<script is:inline>
+			try {
+				if (new URLSearchParams(location.search).get('embed') === '1' || window.self !== window.top) {
+					document.documentElement.dataset.embed = '';
+				}
+			} catch {
+				document.documentElement.dataset.embed = '';
+			}
+		</script>
+		<style is:global>
+			:root[data-embed] body {
+				margin: 0;
+				padding: 4px;
+			}
+		</style>
 	</head>
 	<body>
 		<App client:load />

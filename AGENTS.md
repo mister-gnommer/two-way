@@ -10,9 +10,9 @@ Streaming, history, document-length input, diff view. Multi-pair support is post
 
 Single Astro app, **static output only**; one page mounts the main Svelte island. *Update this section after every change.*
 
-- `src/pages/index.astro` — the only page; mounts the App island with `client:load`
-- `src/components/App.svelte` — main Svelte island (loads config via storage; loading state; once configured renders the translation panel plus a Settings button; opens the setup modal — blocking while unconfigured, via Settings once configured)
-- `src/components/TranslatePanel.svelte` — translation panel: pair indicator, textarea (Enter submits, Shift+Enter newline), Translate/clear buttons, live result area (translation with `PL → EN` direction, notice, error) and Copy with an iframe-safe fallback; resets on saved settings
+- `src/pages/index.astro` — the only page; mounts the App island with `client:load`; an inline head script sets `data-embed` on `<html>` before first paint, plus the global embed page rules
+- `src/components/App.svelte` — main Svelte island (loads config via storage; loading state; once configured renders the translation panel plus a Settings button — a corner gear icon in embed mode, which also makes the panel compact; opens the setup modal — blocking while unconfigured, via Settings once configured)
+- `src/components/TranslatePanel.svelte` — translation panel: pair indicator, textarea (Enter submits, Shift+Enter newline), Translate/clear buttons, live result area (translation with `PL → EN` direction, notice, error) and Copy with an iframe-safe fallback; resets on saved settings; `compact` prop for embed (full width, label as placeholder, 2 rows)
 - `src/lib/types.ts` — `AppConfig` / `StoredRecord` shapes (provider + unordered language pair)
 - `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
 - `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
@@ -44,7 +44,7 @@ Config lives in IndexedDB (`two-way.` name prefix), raw IDB API first — no `id
 The page runs inside a plain iframe on start.me or as a standalone page.
 
 - Never introduce headers/CSP (`X-Frame-Options`, `frame-ancestors`) that block framing.
-- Support `?embed=1`: hide settings chrome, compact layout.
+- Embed mode is `?embed=1` **or** any framing, marked by `data-embed` on `<html>` (set by the inline head script — the single source of truth; CSS keys on `:root[data-embed]`, App reads the attribute in `onMount`). It hides the title, uses a compact layout and shrinks Settings to a gear icon.
 - Verify changes in an iframe context, not just top-level browsing.
 
 ## Code style

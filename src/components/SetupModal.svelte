@@ -361,6 +361,8 @@
   dialog {
     --error-color: #b00020;
     --border-color: #999;
+    /* Padding and border count toward the caps, so the dialog fits short embed frames. */
+    box-sizing: border-box;
     width: min(340px, calc(100vw - 24px));
     max-height: calc(100dvh - 24px);
     overflow-y: auto;

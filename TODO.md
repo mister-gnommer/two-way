@@ -2,7 +2,6 @@
 
 ## current work
 
-- plan `embed-mode`
 
 ## follow-ups (small changes, before beta)
 
