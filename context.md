@@ -113,10 +113,10 @@ Done:
 - [x] `storage-layer` → config-storage
 - [x] `translate-core` → translation
 - [x] `provider-client` → translation
+- [x] `setup-modal` → setup
 
 Next, in order:
 
-- [ ] `setup-modal` → setup — blocking modal, provider + pair, validation
 - [ ] `translate-ui` → translation — input, direction display, result, error toast
 - [ ] `embed-mode` → embedding — `?embed=1`, compact, hide chrome
 - [ ] `presentation` → presentation — theme (plain CSS custom properties), direction-flip view transition, Cthulhu-class easter egg
