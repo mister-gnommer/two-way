@@ -2,6 +2,7 @@
 
 ## current work
 
+- plan `presentation`
 
 ## follow-ups (small changes, before beta)
 
