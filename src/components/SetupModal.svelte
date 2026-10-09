@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, untrack } from 'svelte';
   import { createTranslator } from '../lib/provider';
   import {
     DEFAULT_PROVIDER,
@@ -28,21 +28,24 @@
 
   type TestState = { kind: 'idle' } | { kind: 'testing' } | { kind: 'ok' } | { kind: 'error'; message: string };
 
+  // Read once on purpose: each opening mounts a fresh modal (D6), so the form must not track `config`.
+  const initial = untrack(() => config);
+
   let dialog: HTMLDialogElement;
   let baseUrlInput: HTMLInputElement;
   let modelInput: HTMLInputElement;
-  let baseUrl = $state(config?.provider.baseUrl ?? DEFAULT_PROVIDER.baseUrl);
-  let model = $state(config?.provider.model ?? DEFAULT_PROVIDER.model);
-  let apiKey = $state(config?.provider.apiKey ?? '');
-  let langA = $state(config?.pair.a ?? '');
-  let langB = $state(config?.pair.b ?? '');
+  let baseUrl = $state(initial?.provider.baseUrl ?? DEFAULT_PROVIDER.baseUrl);
+  let model = $state(initial?.provider.model ?? DEFAULT_PROVIDER.model);
+  let apiKey = $state(initial?.provider.apiKey ?? '');
+  let langA = $state(initial?.pair.a ?? '');
+  let langB = $state(initial?.pair.b ?? '');
   let showKey = $state(false);
   let saving = $state(false);
   let errors = $state<SetupErrors>({});
   let testState = $state<TestState>({ kind: 'idle' });
 
   const translator = createTranslator();
-  const options = languageOptions(config ? [config.pair.a, config.pair.b] : []);
+  const options = languageOptions(initial ? [initial.pair.a, initial.pair.b] : []);
 
   /** The raw form contents handed to validateSetup. */
   function currentForm(): SetupForm {

@@ -53,7 +53,7 @@ The page runs inside a plain iframe on start.me or as a standalone page.
 
 ## Testing
 
-vitest for pure logic only (prompt builder, detection/pair edge cases, storage serialization). Mock the provider boundary; no network calls in unit tests. Components have no coverage requirements. Run `npx vitest run && npx tsc --noEmit` after every change.
+vitest for pure logic only (prompt builder, detection/pair edge cases, storage serialization). Mock the provider boundary; no network calls in unit tests. Components have no coverage requirements. Run `npx vitest run && npx tsc --noEmit && npx svelte-check --fail-on-warnings` after every change (`astro check` does not surface Svelte compiler warnings).
 
 ## Workflow
 
