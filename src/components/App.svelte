@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import SetupModal from './SetupModal.svelte';
+  import TranslatePanel from './TranslatePanel.svelte';
   import { createStorage } from '../lib/storage';
   import type { AppConfig } from '../lib/types';
 
@@ -37,7 +38,7 @@
 {#if $loading}
   <p>loading…</p>
 {:else if config}
-  <p>configured pair: {config.pair.a} ↔ {config.pair.b} ({config.provider.model})</p>
+  <TranslatePanel {config} />
   <button type="button" onclick={() => (settingsOpen = true)}>Settings</button>
 {:else}
   <p>no config yet</p>

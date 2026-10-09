@@ -11,7 +11,8 @@ Streaming, history, document-length input, diff view. Multi-pair support is post
 Single Astro app, **static output only**; one page mounts the main Svelte island. *Update this section after every change.*
 
 - `src/pages/index.astro` — the only page; mounts the App island with `client:load`
-- `src/components/App.svelte` — main Svelte island (loads config via storage; loading/configured states; opens the setup modal — blocking while unconfigured, via Settings once configured)
+- `src/components/App.svelte` — main Svelte island (loads config via storage; loading state; once configured renders the translation panel plus a Settings button; opens the setup modal — blocking while unconfigured, via Settings once configured)
+- `src/components/TranslatePanel.svelte` — translation panel: pair indicator, textarea (Enter submits, Shift+Enter newline), Translate/clear buttons, live result area (translation with `PL → EN` direction, notice, error) and Copy with an iframe-safe fallback; resets on saved settings
 - `src/lib/types.ts` — `AppConfig` / `StoredRecord` shapes (provider + unordered language pair)
 - `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
 - `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
@@ -20,8 +21,10 @@ Single Astro app, **static output only**; one page mounts the main Svelte island
 - `src/lib/translate.test.ts` — translation unit tests (prompt, guard, parser, pair/detection edge cases)
 - `src/lib/provider.ts` — provider call: latest-wins `createTranslator()` over OpenAI-compatible Chat Completions (strict json_schema, temperature retry, timeout, fixed error copy)
 - `src/lib/provider.test.ts` — provider unit tests (injected fetch stub, no network)
-- `src/lib/setup.ts` — setup validation: `validateSetup` (trim/required, `completeBaseUrl` https:// completion, https-or-loopback base URL, visible-ASCII key, distinct pair), `DEFAULT_PROVIDER` first-run prefills, the curated `LANGUAGES` list and `languageOptions` (Polish, English first)
+- `src/lib/setup.ts` — setup validation: `validateSetup` (trim/required, `completeBaseUrl` https:// completion, https-or-loopback base URL, visible-ASCII key, distinct pair), `DEFAULT_PROVIDER` first-run prefills, the curated `LANGUAGES` list and `languageOptions` (Polish, English first), `languageLabel` (English language names, shared with the panel)
 - `src/lib/setup.test.ts` — setup validation unit tests (form rules, URL/key rejection, language list invariants)
+- `src/lib/translate-view.ts` — panel display logic: `shortTag`, `pairLabel` / `directionLabel` (`PL ↔ EN`, `PL → EN` + full names), `resultView` (translation outcome → result-area view; `aborted` → null)
+- `src/lib/translate-view.test.ts` — display helper unit tests
 - `src/components/SetupModal.svelte` — setup modal island: native `<dialog>` form for provider + language pair; blocking on first run, reopenable from Settings; validates, optionally tests through `createTranslator`, saves via `onsave`
 - Root configs: `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`
 

@@ -78,7 +78,7 @@ const VISIBLE_ASCII = /^[\x21-\x7E]+$/;
  * `Intl.DisplayNames` has no name for it or rejects it as malformed.
  * @param tag a BCP-47 language tag
  */
-function labelFor(tag: string): string {
+export function languageLabel(tag: string): string {
   try {
     return displayNames.of(tag) ?? tag;
   } catch {
@@ -101,9 +101,9 @@ export function languageOptions(saved: readonly string[]): LanguageOption[] {
   }
   const rest = [...tags]
     .filter((tag) => !PINNED_LANGUAGES.includes(tag))
-    .map((tag) => ({ tag, label: labelFor(tag) }))
+    .map((tag) => ({ tag, label: languageLabel(tag) }))
     .sort((first, second) => first.label.localeCompare(second.label, 'en'));
-  return [...PINNED_LANGUAGES.map((tag) => ({ tag, label: labelFor(tag) })), ...rest];
+  return [...PINNED_LANGUAGES.map((tag) => ({ tag, label: languageLabel(tag) })), ...rest];
 }
 
 /** A leading `scheme://`. Matched on `://` because `new URL('localhost:11434')` parses `localhost:` as a scheme. */
