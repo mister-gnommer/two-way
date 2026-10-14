@@ -119,10 +119,7 @@ Done:
 - [x] `translate-ui` → translation
 - [x] `embed-mode` → embedding
 - [x] `look-and-feel` → presentation — theme (plain CSS custom properties), direction-flip view transition, Cthulhu-class easter egg
-
-In progress:
-
-- [ ] `beta-readiness` → setup, translation — `gpt-4.1-mini` first-run default, short-input and instruction-as-data prompt fixes, provider evidence and release documentation; RouteLLM matrix and production-build iframe smoke checks passed locally, verification/review remain before the implementation commit
+- [x] `beta-readiness` → setup, translation — `gpt-4.1-mini` first-run default, short-input and instruction-as-data prompt fixes, provider evidence and release documentation; deployment/start.me release checks remain open in `README.md`
 
 Deferred:
 

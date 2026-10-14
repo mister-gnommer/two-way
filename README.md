@@ -53,7 +53,7 @@ Providers must allow direct browser requests (CORS) and support strict JSON-sche
 
 ### Local acceptance record
 
-Validated on **2026-10-14**, through the app at `http://localhost:4321`, using RouteLLM at `https://routellm.abacus.ai/v1`, model identifier `gpt-4.1-mini`, and T3 Code's Linux Chromium 152.0.7977.130 browser. Revision: `a0511d7` plus the uncommitted `beta-readiness` implementation; SHA-256 of `src/lib/translate.ts`: `cb09ee85f95e35eb397a6216b759baef0474cc8f1173660f29cc94f1d7afdbc1`.
+Validated on **2026-10-14**, through the app at `http://localhost:4321`, using RouteLLM at `https://routellm.abacus.ai/v1`, model identifier `gpt-4.1-mini`, and T3 Code's Linux Chromium 152.0.7977.130 browser. Revision: `a0511d7` plus the then-uncommitted `beta-readiness` implementation (later committed as `083a9a2`); SHA-256 of `src/lib/translate.ts`: `cb09ee85f95e35eb397a6216b759baef0474cc8f1173660f29cc94f1d7afdbc1`.
 
 Each input was submitted three times through the app's form after the final prompt update: **39/39 outcomes passed**. Results establish behavior for these cases and this configuration, not a guarantee for every future model response. Historical provider observations above are separate from this run.
 
@@ -128,4 +128,4 @@ Local validation does not close the following deployment-dependent checks. Recor
 - [ ] **Frames and browsers:** check a small widget in each intended browser, including Safari if targeted, and verify usable session-only configuration when persistent storage is blocked.
 - [ ] **Release-candidate provider acceptance:** repeat the matrix above through the deployed release candidate, record results, and resolve failures before announcing beta.
 
-Gemini/RouteLLM schema compatibility, additional provider coverage, the `postMessage` API, and remaining UI polish are tracked in `TODO.md`. OpenSpec verification and code review precede the implementation commit; deployment and publishing a release are separate steps.
+Gemini/RouteLLM schema compatibility, additional provider coverage, the `postMessage` API, and remaining UI polish are tracked in `TODO.md`. Deployment and publishing a release are separate steps.

@@ -2,9 +2,8 @@
 
 ## current work
 
-- finish `beta-readiness`: OpenSpec verification and code review before the implementation commit; production-build iframe smoke checks passed, including clipboard fallback and first-run setup
-- default model and prompt changes are implemented; RouteLLM / `gpt-4.1-mini` passed the local 39-run acceptance matrix (2026-10-14); direct OpenAI remains untested
 - complete the deployment/start.me release checklist in `README.md` before announcing beta
+- direct OpenAI / `gpt-4.1-mini` remains untested; RouteLLM passed the local acceptance matrix (2026-10-14)
 
 ## deferred follow-ups
 
