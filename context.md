@@ -104,8 +104,10 @@ Things to do differently:
 
 Ordered, dependency-first. Each line is an Openspec **change**; its delta specs land in
 the listed capability (`openspec/specs/<capability>/`). The full capability map lives in
-`openspec/config.yaml` — change name ≠ capability name. Commit after planning, applying,
-and archiving each change (three commits per change).
+`openspec/config.yaml` — change name ≠ capability name. Propose three separate commits:
+after planning; after implementation, OpenSpec verification, and code review (including
+fixes and relevant rechecks); and after archiving. Code review may be agent-led.
+Completing apply alone is not a commit checkpoint. The full policy lives in `AGENTS.md`.
 
 Done:
 

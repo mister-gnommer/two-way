@@ -32,6 +32,8 @@ rules:
   tasks:
     - Derive tasks from specs and design only. Never add a task solely because it
       appears in grilling-ledger.md.
+    - Commit-cadence reminders MUST follow the current AGENTS.md workflow. Do not
+      copy reminders from archived changes.
 
 # Per-operation guidance.
 operations:
@@ -39,6 +41,9 @@ operations:
     guidance:
       - grilling-ledger.md is a historical decision record, not a task source.
         Never implement from it; implement from specs and tasks.
+      - Follow the commit checkpoints in AGENTS.md. After applying, suggest OpenSpec
+        verification and code review; propose the implementation commit only after
+        both are complete, including resulting fixes and relevant rechecks.
   archive:
     guidance:
       - grilling-ledger.md archives with the change as a supplementary historical

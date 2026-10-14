@@ -65,4 +65,10 @@ vitest for pure logic only (prompt builder, detection/pair edge cases, storage s
 
 Spec-first via Openspec (`openspec/`); implementation follows change proposals. Commit messages follow `CONTRIBUTING.md`. Semver tags. Vercel Hobby deploys on push to `main`. Keep an easter egg of Cthulhu-class magnitude somewhere in the UI.
 
-Commit cadence for Openspec changes: the agent SHALL propose committing after each significant step — after planning (artifacts complete), after applying/implementing (tasks complete), and after archiving. That's three commits per spec change; never batch steps into one commit.
+Commit cadence for Openspec changes: the agent SHALL propose three separate commits:
+
+1. After planning: artifacts complete.
+2. After implementation, OpenSpec verification, and code review: tasks complete, review findings resolved, and relevant checks rerun after fixes. Code review may be agent-led.
+3. After archiving: main specs synced and the change archived.
+
+Completing apply alone is not a commit checkpoint. Suggest verification and code review next; propose the implementation commit only after both are complete. Never batch these three checkpoints into one commit. Commit only when the user explicitly asks.
