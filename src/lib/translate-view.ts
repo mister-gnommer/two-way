@@ -12,7 +12,7 @@ export interface LanguageLabel {
 export type ResultView =
   | { kind: 'idle' }
   | { kind: 'translating' }
-  | { kind: 'translation'; text: string; lang: string; direction: LanguageLabel }
+  | { kind: 'translation'; text: string; lang: string; direction: LanguageLabel; eldritch?: boolean }
   | { kind: 'notice'; message: string }
   | { kind: 'error'; message: string };
 

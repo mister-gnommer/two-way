@@ -11,8 +11,9 @@ Streaming, history, document-length input, diff view. Multi-pair support is post
 Single Astro app, **static output only**; one page mounts the main Svelte island. *Update this section after every change.*
 
 - `src/pages/index.astro` — the only page; mounts the App island with `client:load`; an inline head script sets `data-embed` on `<html>` before first paint, plus the global embed page rules
+- `src/styles/theme.css` — shared light/dark colour tokens and system UI font; follows the system scheme in the page, panel and modal; components use these tokens
 - `src/components/App.svelte` — main Svelte island (loads config via storage; loading state; once configured renders the translation panel plus a Settings button — a corner gear icon in embed mode, which also makes the panel compact; opens the setup modal — blocking while unconfigured, via Settings once configured)
-- `src/components/TranslatePanel.svelte` — translation panel: pair indicator, textarea (Enter submits, Shift+Enter newline), Translate/clear buttons, live result area (translation with `PL → EN` direction, notice, error) and Copy with an iframe-safe fallback; resets on saved settings; `compact` prop for embed (full width, label as placeholder, 2 rows)
+- `src/components/TranslatePanel.svelte` — translation panel: pair indicator, textarea (Enter submits, Shift+Enter newline), Translate/clear buttons, live result area (translation with `PL → EN` direction, notice, error) and Copy with an iframe-safe fallback; animates direction changes through View Transitions with reduced-motion and staleness guards; answers the R'lyehian chant locally with finite eldritch styling; resets on saved settings; `compact` prop for embed (full width, label as a themed placeholder, 2 rows)
 - `src/lib/types.ts` — `AppConfig` / `StoredRecord` shapes (provider + unordered language pair)
 - `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
 - `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
@@ -25,6 +26,8 @@ Single Astro app, **static output only**; one page mounts the main Svelte island
 - `src/lib/setup.test.ts` — setup validation unit tests (form rules, URL/key rejection, language list invariants)
 - `src/lib/translate-view.ts` — panel display logic: `shortTag`, `pairLabel` / `directionLabel` (`PL ↔ EN`, `PL → EN` + full names), `resultView` (translation outcome → result-area view; `aborted` → null)
 - `src/lib/translate-view.test.ts` — display helper unit tests
+- `src/lib/cthulu.ts` — loose full-chant matching and the local English easter-egg translation view
+- `src/lib/cthulu.test.ts` — chant matching and reply contract unit tests
 - `src/components/SetupModal.svelte` — setup modal island: native `<dialog>` form for provider + language pair; blocking on first run, reopenable from Settings; validates, optionally tests through `createTranslator`, saves via `onsave`
 - Root configs: `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`
 

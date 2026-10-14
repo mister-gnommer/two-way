@@ -32,7 +32,7 @@ The page SHALL use a light or a dark colour scheme to match the system preferenc
 
 ### Requirement: Text stays readable in both schemes
 
-In both schemes, text SHALL have a contrast ratio of at least 4.5:1 against its background. This covers body text, muted text, error text, notices and control labels. Errors SHALL stay visually distinct from translations in both schemes.
+In both schemes, text SHALL have a contrast ratio of at least 4.5:1 against its background. This covers body text, muted text, error text, notices, control labels and placeholder text. Errors SHALL stay visually distinct from translations in both schemes.
 
 #### Scenario: Error in the dark scheme
 
@@ -44,6 +44,11 @@ In both schemes, text SHALL have a contrast ratio of at least 4.5:1 against its 
 
 - **WHEN** the translating indicator is shown in the light scheme
 - **THEN** its text contrast against the background is at least 4.5:1
+
+#### Scenario: Compact input placeholder in both schemes
+
+- **WHEN** the compact input is empty, either through `?embed=1` or inside an iframe
+- **THEN** its "Text to translate" placeholder has a contrast ratio of at least 4.5:1 against the input background in both the light and dark schemes
 
 ### Requirement: Page uses a system UI font
 

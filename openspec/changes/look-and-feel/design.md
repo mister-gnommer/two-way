@@ -97,6 +97,10 @@ the tokens.**
 - **Exception:** the modal backdrop's translucent black stays hard-coded, because it works in
   both schemes.
 - **Gear:** `App.svelte`'s gear already uses `currentColor`.
+- **Placeholder:** `TranslatePanel.svelte` sets `textarea::placeholder` to
+  `color: var(--color-muted)` and `opacity: 1`. The browser's default grey has insufficient
+  contrast against the dark surface, and the placeholder is the compact input's only
+  visible label.
 
 **D4: The R'lyehian chant is a pure helper in `src/lib/cthulu.ts`.**
 

@@ -84,6 +84,13 @@
   .main {
     position: relative;
   }
+  button {
+    font: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: inherit;
+  }
   .gear {
     position: absolute;
     top: 0;

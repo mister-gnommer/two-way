@@ -359,18 +359,16 @@
 
 <style>
   dialog {
-    --error-color: #b00020;
-    --border-color: #999;
     /* Padding and border count toward the caps, so the dialog fits short embed frames. */
     box-sizing: border-box;
     width: min(340px, calc(100vw - 24px));
     max-height: calc(100dvh - 24px);
     overflow-y: auto;
     padding: 16px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    color: #111;
-    background: #fff;
+    color: var(--color-text);
+    background: var(--color-surface);
   }
   dialog::backdrop {
     background: rgb(0 0 0 / 45%);
@@ -399,9 +397,9 @@
   button {
     font: inherit;
     padding: 6px 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
-    background: #fff;
+    background: var(--color-surface);
     color: inherit;
   }
   input {
@@ -441,22 +439,22 @@
   }
   .error {
     margin: 0;
-    color: var(--error-color);
+    color: var(--color-error);
     font-size: 0.8rem;
   }
   .status {
     margin: 0;
-    color: #0a7d32;
+    color: var(--color-success);
     font-size: 0.85rem;
   }
   .notice {
     max-width: 300px;
     margin: 0 auto 12px;
     padding: 8px;
-    border: 1px solid #99a;
+    border: 1px solid var(--color-notice-border);
     border-radius: 4px;
-    background: #eef;
-    color: #334;
+    background: var(--color-notice-bg);
+    color: var(--color-notice-text);
     font-size: 0.85rem;
   }
   .footer [role='status']:not(:empty) {
@@ -470,6 +468,11 @@
   }
   button {
     cursor: pointer;
+  }
+  button[type='submit'] {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
   }
   button:disabled {
     opacity: 0.6;

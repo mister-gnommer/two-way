@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onMount, untrack } from 'svelte';
+  import { flushSync, onMount, untrack } from 'svelte';
+  import { chantView, isChant } from '../lib/cthulu';
   import { createTranslator } from '../lib/provider';
   import { pairLabel, resultView, type ResultView } from '../lib/translate-view';
   import type { AppConfig } from '../lib/types';
@@ -25,6 +26,7 @@
   let view = $state<ResultView>({ kind: 'idle' });
   let copyState = $state<CopyState>('idle');
   let copyTimer: ReturnType<typeof setTimeout> | undefined;
+  let lastDirection: string | null = null;
 
   const pair = $derived(pairLabel(config.pair));
 
@@ -47,22 +49,53 @@
    */
   function show(next: ResultView): void {
     view = next;
+    if (next.kind === 'translation') {
+      lastDirection = next.direction.text;
+    }
     clearTimeout(copyTimer);
     copyState = 'idle';
+  }
+
+  /** Animates direction changes without letting a delayed callback replace a newer view. */
+  function showOutcome(next: ResultView): void {
+    if (
+      next.kind !== 'translation' ||
+      lastDirection === null ||
+      lastDirection === next.direction.text ||
+      typeof document.startViewTransition !== 'function' ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      show(next);
+      return;
+    }
+    const shown = view;
+    const transition = document.startViewTransition(() => {
+      if (view === shown) {
+        flushSync(() => show(next));
+      }
+    });
+    // Skipped animations reject readiness but still run their DOM update.
+    void transition.ready.catch(() => undefined);
   }
 
   /** Cancels the in-flight request, whose call then resolves `aborted`, and empties the result. */
   function reset(): void {
     translator.cancel();
+    lastDirection = null;
     show({ kind: 'idle' });
   }
 
   /** Translates the current input; a newer submit supersedes this one, whose `aborted` result is ignored. */
   async function handleSubmit(): Promise<void> {
+    if (isChant(input)) {
+      translator.cancel();
+      showOutcome(chantView());
+      return;
+    }
     show({ kind: 'translating' });
     const next = resultView(await translator.translate(config, input));
     if (next) {
-      show(next);
+      showOutcome(next);
     }
   }
 
@@ -191,7 +224,7 @@
         <span aria-hidden="true">{view.direction.text}</span>
         <span class="visually-hidden">{view.direction.name}</span>
       </p>
-      <p class="translation" lang={view.lang} bind:this={translationEl}>{view.text}</p>
+      <p class="translation" class:eldritch={view.eldritch} lang={view.lang} bind:this={translationEl}>{view.text}</p>
       <div class="actions">
         <button type="button" onclick={() => void copyTranslation()}>
           {copyState === 'copied' ? 'Copied' : 'Copy'}
@@ -210,8 +243,6 @@
 
 <style>
   .panel {
-    --error-color: #b00020;
-    --border-color: #999;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -233,6 +264,24 @@
     font-weight: 600;
     letter-spacing: 0.05em;
   }
+  .direction {
+    view-transition-name: direction;
+  }
+  :global(::view-transition-old(root)),
+  :global(::view-transition-new(root)) {
+    animation: none;
+  }
+  :global(::view-transition-new(direction)) {
+    animation: direction-flip 300ms ease-out;
+  }
+  @keyframes -global-direction-flip {
+    from {
+      transform: rotateX(90deg);
+    }
+    to {
+      transform: rotateX(0deg);
+    }
+  }
   form {
     display: flex;
     flex-direction: column;
@@ -245,15 +294,19 @@
   button {
     font: inherit;
     padding: 6px 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
-    background: #fff;
+    background: var(--color-surface);
     color: inherit;
   }
   textarea {
     flex: 1;
     min-width: 0;
     resize: vertical;
+  }
+  textarea::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
   }
   .input-row {
     display: flex;
@@ -272,6 +325,11 @@
   button {
     cursor: pointer;
   }
+  button[type='submit'] {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
   .result {
     display: flex;
     flex-direction: column;
@@ -281,12 +339,27 @@
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
+  .translation.eldritch {
+    color: var(--color-eldritch);
+    text-shadow: 0 0 8px var(--color-eldritch);
+    animation: eldritch-pulse 1.2s ease-in-out 3;
+  }
+  @keyframes eldritch-pulse {
+    50% {
+      text-shadow: 0 0 16px var(--color-eldritch);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .translation.eldritch {
+      animation: none;
+    }
+  }
   .muted {
-    color: #555;
+    color: var(--color-muted);
     font-size: 0.85rem;
   }
   .error {
-    color: var(--error-color);
+    color: var(--color-error);
   }
   .visually-hidden {
     position: absolute;
