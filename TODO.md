@@ -2,7 +2,7 @@
 
 ## current work
 
-- plan `presentation`
+- plan `postmessage-api`
 
 ## follow-ups (small changes, before beta)
 

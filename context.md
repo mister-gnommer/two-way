@@ -116,10 +116,10 @@ Done:
 - [x] `setup-modal` → setup
 - [x] `translate-ui` → translation
 - [x] `embed-mode` → embedding
+- [x] `look-and-feel` → presentation — theme (plain CSS custom properties), direction-flip view transition, Cthulhu-class easter egg
 
 Next, in order:
 
-- [ ] `presentation` → presentation — theme (plain CSS custom properties), direction-flip view transition, Cthulhu-class easter egg
 - [ ] `postmessage-api` → embedding — optional bonus (host prefill/read)
 
 ## Stack summary
