@@ -63,7 +63,7 @@ vitest for pure logic only (prompt builder, detection/pair edge cases, storage s
 
 ## Workflow
 
-Spec-first via Openspec (`openspec/`); implementation follows change proposals. Commit messages follow `CONTRIBUTING.md`. Semver tags. Vercel Hobby deploys on push to `main`. Keep an easter egg of Cthulhu-class magnitude somewhere in the UI.
+Spec-first via Openspec (`openspec/`); implementation follows change proposals. A request to fix something is a request to fix the whole chain, starting with the spec: update the affected specs, then proposal/design/tasks, then code/tests, then docs (`README.md`, `AGENTS.md`, `context.md`, `TODO.md`), in that order, without asking separately for each layer. Commit messages follow `CONTRIBUTING.md`. Semver tags. Vercel Hobby deploys on push to `main`. Keep an easter egg of Cthulhu-class magnitude somewhere in the UI.
 
 Commit cadence for Openspec changes: the agent SHALL propose three separate commits:
 
