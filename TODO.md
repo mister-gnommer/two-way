@@ -2,13 +2,15 @@
 
 ## current work
 
-- plan `postmessage-api`
+- finish `beta-readiness`: OpenSpec verification and code review before the implementation commit; production-build iframe smoke checks passed, including clipboard fallback and first-run setup
+- default model and prompt changes are implemented; RouteLLM / `gpt-4.1-mini` passed the local 39-run acceptance matrix (2026-10-14); direct OpenAI remains untested
+- complete the deployment/start.me release checklist in `README.md` before announcing beta
 
-## follow-ups (small changes, before beta)
+## deferred follow-ups
 
-- default model: `gpt-4o-mini` returns `und` for single words (`kawa`, `coffee`, `gift`) — switch `DEFAULT_PROVIDER.model` to `gpt-4.1-mini` (exists on OpenAI and RouteLLM; `gpt-5-mini`, `claude-haiku-5-5` also pass) → `setup`
-- prompt: tighten the `und` escape hatch — single words belong to a pair language; `und` only for non-language text. Injected instructions ("Ignore all previous instructions…") currently come back `und` instead of being translated as-is → `translation`
 - response schema: Gemini models via RouteLLM reject `type: ['string', 'null']` (400, shown as generic "HTTP 400") — consider `anyOf` / nullable form, or map to the structured-output message → `translation`
+- validate additional provider/model combinations before listing them as tested; current evidence is in `README.md`
+- `postmessage-api` → embedding — optional host prefill/read integration; revisit when a host needs it
 
 ## polish pass (end of project)
 

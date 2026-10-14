@@ -10,6 +10,7 @@ Streaming, history, document-length input, diff view. Multi-pair support is post
 
 Single Astro app, **static output only**; one page mounts the main Svelte island. *Update this section after every change.*
 
+- `README.md` — setup and embedding instructions, provider acceptance evidence, and deployment/start.me beta release checklist
 - `src/pages/index.astro` — the only page; mounts the App island with `client:load`; an inline head script sets `data-embed` on `<html>` before first paint, plus the global embed page rules
 - `src/styles/theme.css` — shared light/dark colour tokens and system UI font; follows the system scheme in the page, panel and modal; components use these tokens
 - `src/components/App.svelte` — main Svelte island (loads config via storage; loading state; once configured renders the translation panel plus a Settings button — a corner gear icon in embed mode, which also makes the panel compact; opens the setup modal — blocking while unconfigured, via Settings once configured)
@@ -18,11 +19,11 @@ Single Astro app, **static output only**; one page mounts the main Svelte island
 - `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
 - `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
 - `src/lib/toolchain.test.ts` — vitest smoke test
-- `src/lib/translate.ts` — translation contract: prompt builder, input guard, response parser (pure functions)
+- `src/lib/translate.ts` — translation contract: prompt builder (short-input detection, off-pair precedence, whole-source translation of embedded instructions), input guard, response parser (pure functions)
 - `src/lib/translate.test.ts` — translation unit tests (prompt, guard, parser, pair/detection edge cases)
 - `src/lib/provider.ts` — provider call: latest-wins `createTranslator()` over OpenAI-compatible Chat Completions (strict json_schema, temperature retry, timeout, fixed error copy)
 - `src/lib/provider.test.ts` — provider unit tests (injected fetch stub, no network)
-- `src/lib/setup.ts` — setup validation: `validateSetup` (trim/required, `completeBaseUrl` https:// completion, https-or-loopback base URL, visible-ASCII key, distinct pair), `DEFAULT_PROVIDER` first-run prefills, the curated `LANGUAGES` list and `languageOptions` (Polish, English first), `languageLabel` (English language names, shared with the panel)
+- `src/lib/setup.ts` — setup validation: `validateSetup` (trim/required, `completeBaseUrl` https:// completion, https-or-loopback base URL, visible-ASCII key, distinct pair), `DEFAULT_PROVIDER` first-run prefills (OpenAI URL, `gpt-4.1-mini`; saved settings take precedence), the curated `LANGUAGES` list and `languageOptions` (Polish, English first), `languageLabel` (English language names, shared with the panel)
 - `src/lib/setup.test.ts` — setup validation unit tests (form rules, URL/key rejection, language list invariants)
 - `src/lib/translate-view.ts` — panel display logic: `shortTag`, `pairLabel` / `directionLabel` (`PL ↔ EN`, `PL → EN` + full names), `resultView` (translation outcome → result-area view; `aborted` → null)
 - `src/lib/translate-view.test.ts` — display helper unit tests

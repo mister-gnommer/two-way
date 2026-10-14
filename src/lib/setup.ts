@@ -56,7 +56,7 @@ const PINNED_LANGUAGES: readonly string[] = ['pl', 'en'];
 /** First-run prefills for the provider fields; a saved config always takes precedence. */
 export const DEFAULT_PROVIDER = {
   baseUrl: 'https://api.openai.com/v1',
-  model: 'gpt-4o-mini',
+  model: 'gpt-4.1-mini',
 };
 
 /** One entry of the language selects. */

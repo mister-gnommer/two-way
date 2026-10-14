@@ -120,9 +120,14 @@ Done:
 - [x] `embed-mode` → embedding
 - [x] `look-and-feel` → presentation — theme (plain CSS custom properties), direction-flip view transition, Cthulhu-class easter egg
 
-Next, in order:
+In progress:
 
-- [ ] `postmessage-api` → embedding — optional bonus (host prefill/read)
+- [ ] `beta-readiness` → setup, translation — `gpt-4.1-mini` first-run default, short-input and instruction-as-data prompt fixes, provider evidence and release documentation; RouteLLM matrix and production-build iframe smoke checks passed locally, verification/review remain before the implementation commit
+
+Deferred:
+
+- [ ] `postmessage-api` → embedding — optional bonus (host prefill/read); ordinary iframe use already works without it
+- Gemini/RouteLLM schema compatibility and remaining polish stay in `TODO.md`; deployment/start.me release gates are in `README.md`
 
 ## Stack summary
 

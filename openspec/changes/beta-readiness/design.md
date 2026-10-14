@@ -49,9 +49,9 @@ Alternatives: a dictionary would only cover selected words; parser fallback woul
 
 ### D3: Validate model behavior with a small manual matrix
 
-Extend the existing prompt/data-boundary test to include instruction-shaped input and confirm it remains unmodified user data rather than becoming system content. Retain existing parser/provider tests as regression coverage. Do not add tests that merely search for the new prompt sentences or mock successful translations as evidence of real model quality.
+`buildTranslationPrompt` passes every input through the same path without branching or escaping, so the existing prompt/data-boundary test already covers instruction-shaped input; adding such cases would not exercise any additional code. Whether the model treats instructions as data is established only by the manual matrix below. Retain existing parser/provider tests as regression coverage. Do not add tests that merely search for the new prompt sentences or mock successful translations as evidence of real model quality.
 
-After implementation, use the actual browser app and its existing provider request path for the matrix below. The primary acceptance target is OpenAI with `gpt-4.1-mini`. RouteLLM with the same model is an additional target only when a usable configuration is available; lack of that configuration does not block the OpenAI beta and must not be recorded as a pass.
+After implementation, use the actual browser app and its existing provider request path for the matrix below. The primary acceptance target is the configured RouteLLM endpoint, `https://routellm.abacus.ai/v1`, with `gpt-4.1-mini`, as confirmed by the maintainer during apply. Direct OpenAI with the same model is an additional target only when a usable configuration is available; lack of that configuration does not block this beta and must not be recorded as a pass. The first-run OpenAI base URL is unchanged; the README must distinguish default prefills from the RouteLLM configuration actually tested.
 
 | Pair | Input | Acceptance |
 | --- | --- | --- |
@@ -89,6 +89,14 @@ Include a release checklist for the maintainer:
 Preparing this checklist is part of this change; executing deployment-dependent items is a separate release gate. Local iframe checks can establish implementation readiness but cannot close those deployment checks. Do not mark them complete based only on a local preview. Update `TODO.md` and `context.md` to make beta readiness current, leave `postmessage-api` deferred, and retain unresolved follow-ups.
 
 Alternatives: treating documentation support as a successful live test would overstate compatibility; putting cloud operations into apply tasks would couple code completion to publishing. A permanent README keeps setup instructions and release gates discoverable.
+
+### D5: Inspect the existing clipboard fallback before changing it
+
+The maintainer approved clipboard investigation and a fix if needed after an initial cross-origin smoke probe failed to confirm a copy. Exercise the actual Copy control with clipboard-write denied, observe the selected text and native `execCommand('copy')` outcome, and compare the resulting clipboard with a known translation. Also force the legacy copy call to fail and verify that the translation stays selected with the manual-copy instruction.
+
+Use a temporary local browser harness with an app frame whose immediate parent is cross-origin. A same-origin ancestor can inspect that app frame without changing its denied clipboard permissions. Keep all instrumentation out of project source and build output. If these checks reproduce a defect, make a focused correction in `TranslatePanel.svelte`; if the original fallback works, retain it and correct the inconclusive smoke record instead. Adding a helper or automated test framework solely for this investigation is unnecessary.
+
+Alternatives: replacing the fallback before inspecting it risks changing working behavior; granting clipboard permissions would bypass the path that plain embeds need. Native copy success and manual recovery are both observable through this harness.
 
 ## Risks / Trade-offs
 
