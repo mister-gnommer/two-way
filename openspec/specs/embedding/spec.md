@@ -25,61 +25,30 @@ The system SHALL treat the page as embedded when its URL query has `embed=1`, or
 #### Scenario: Top-level page keeps the full layout
 
 - **WHEN** the page is opened top-level without `embed=1`, including with `?embed=0`
-- **THEN** the full layout is shown, with the title and the Settings text button
+- **THEN** the full layout is shown, with the logo-and-title header
 
 ### Requirement: Embed mode applies before first paint
 
-In embed mode, the full-layout chrome (the title and the default page margin) SHALL NOT be painted at any point, including while the config is loading.
+In embed mode, the full-layout chrome (the logo-and-title header and the default page margin) SHALL NOT be painted at any point, including while the config is loading.
 
 #### Scenario: No flash of the full layout
 
 - **WHEN** the page loads in embed mode
-- **THEN** the title is never visible, not even before the app has loaded its config
+- **THEN** the header is never visible, not even before the app has loaded its config
 
 ### Requirement: Compact layout uses the frame's width
 
-In embed mode, the page SHALL hide the title, drop the default page margin in favour of a small inset, and let the translation panel fill the available width instead of the full layout's 300 px cap.
+In embed mode, the page SHALL hide the logo-and-title header, drop the default page margin in favour of a small inset, and let the translation panel fill the available width instead of the full layout's centred column cap.
 
 #### Scenario: Panel fills a wide frame
 
-- **WHEN** the page is embedded in a frame 500 px wide
-- **THEN** the panel's input spans the frame's width, minus the small inset
+- **WHEN** the page is embedded in a frame 900 px wide
+- **THEN** the panel's input bar spans the frame's width, minus the small inset
 
 #### Scenario: Panel fits a narrow frame
 
 - **WHEN** the page is embedded in a frame 250 px wide
 - **THEN** the panel shows without horizontal scrolling
-
-### Requirement: Compact input keeps its accessible name
-
-In embed mode, the input's visible label SHALL be hidden, the same text SHALL appear as the input's placeholder, and the label SHALL remain the input's accessible name. The input SHALL start two rows tall and remain resizable.
-
-#### Scenario: Label becomes a placeholder
-
-- **WHEN** a configured page is shown in embed mode
-- **THEN** no label text is visible above the input
-- **AND** the empty input shows "Text to translate" as its placeholder
-- **AND** the input's accessible name is "Text to translate"
-
-#### Scenario: Input starts shorter
-
-- **WHEN** a configured page is shown in embed mode
-- **THEN** the input is two rows tall
-
-### Requirement: Settings is a compact icon control in embed mode
-
-Once a configuration exists, embed mode SHALL show the settings control as a small icon button in the top-right corner instead of the Settings text button. Its accessible name SHALL be "Settings", and it SHALL open the same setup modal as the text button.
-
-#### Scenario: Gear replaces the text button
-
-- **WHEN** a configured page is shown in embed mode
-- **THEN** an icon button named "Settings" is shown in the top-right corner
-- **AND** no Settings text button is shown
-
-#### Scenario: Gear opens the settings
-
-- **WHEN** the user activates the icon button
-- **THEN** the setup modal opens, prefilled with the saved configuration and dismissible
 
 ### Requirement: Setup works inside a frame
 

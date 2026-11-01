@@ -14,5 +14,5 @@
 ## polish pass (end of project)
 
 - off-pair message shows raw tags ("appears to be in de, which is not pl or en") — use language names
-- after clicking Translate, focus stays on the button — return it to the textarea (nicer in the compact widget)
+- after clicking the logo Translate button, focus stays on it — return it to the textarea (nicer in the start.me widget)
 - 403 from RouteLLM on a bad key shows "refused… check the API key and access" rather than "key rejected" — consider wording that leads with the key
