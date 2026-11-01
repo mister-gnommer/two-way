@@ -116,7 +116,7 @@ For a host page you control, replace the example URL with your deployment:
 ></iframe>
 ```
 
-The gear opens Settings inside the frame. Small frames allow the setup form to scroll. Copy uses a fallback when clipboard permissions prevent direct copying; if copying still fails, the app selects the translation and asks you to copy it manually. No `postMessage` integration is required or implemented.
+The gear icon in the input bar opens Settings inside the frame. Small frames allow the setup form to scroll. Copy uses a fallback when clipboard permissions prevent direct copying; if copying still fails, the app selects the translation and asks you to copy it manually. No `postMessage` integration is required or implemented.
 
 ## Beta release checklist
 

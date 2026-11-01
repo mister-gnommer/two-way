@@ -54,7 +54,7 @@ In both layouts, the input's label SHALL be visually hidden, the same text SHALL
 
 ### Requirement: Input grows with its content
 
-The input SHALL start one row tall and grow by one row per line of content up to six rows. Past six rows, it SHALL keep that height and scroll. It SHALL return to fewer rows when lines are removed. The input SHALL NOT offer a manual resize handle.
+The input SHALL start one row tall and grow by one row per line of content up to six rows. Past six rows, it SHALL keep that height and scroll. It SHALL return to fewer rows when lines are removed. Its height SHALL follow width changes that rewrap the content, and it SHALL never be shorter than one row. The input SHALL NOT offer a manual resize handle.
 
 #### Scenario: Single line
 
@@ -75,3 +75,13 @@ The input SHALL start one row tall and grow by one row per line of content up to
 
 - **WHEN** the input holds three lines and the user activates clear
 - **THEN** the input is empty and one row tall
+
+#### Scenario: Width change rewraps the input
+
+- **WHEN** the input holds a long line that wraps to two rows and the panel widens until it fits on one
+- **THEN** the input becomes one row tall without further typing
+
+#### Scenario: Loaded before layout
+
+- **WHEN** the panel mounts in a frame that has no layout yet, then becomes visible
+- **THEN** the input is at least one row tall and can be clicked

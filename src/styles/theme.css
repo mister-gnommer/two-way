@@ -10,8 +10,11 @@
   --color-notice-bg: light-dark(#edf3fc, #24334a);
   --color-notice-border: light-dark(#8aa4c9, #6885b1);
   --color-notice-text: light-dark(#263f67, #d9e7ff);
-  --color-accent: light-dark(#2457ad, #a9c7ff);
-  --color-on-accent: light-dark(#fff, #12243f);
+  --color-accent: light-dark(#1f7f76, #5fd3c6);
+  --color-on-accent: light-dark(#fff, #0d2724);
+  --color-accent-soft: light-dark(#e3f4f2, #173633);
+  --color-accent-soft-text: light-dark(#17675f, #9be6dc);
+  --color-logo-tile: light-dark(#1d2a2e, #0f1419);
   --color-eldritch: light-dark(#25653e, #9be2b0);
   --font-ui: system-ui, sans-serif;
 }

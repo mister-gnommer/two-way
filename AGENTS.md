@@ -12,9 +12,10 @@ Single Astro app, **static output only**; one page mounts the main Svelte island
 
 - `README.md` — setup and embedding instructions, provider acceptance evidence, and deployment/start.me beta release checklist
 - `src/pages/index.astro` — the only page; mounts the App island with `client:load`; an inline head script sets `data-embed` on `<html>` before first paint, plus the global embed page rules
-- `src/styles/theme.css` — shared light/dark colour tokens and system UI font; follows the system scheme in the page, panel and modal; components use these tokens
-- `src/components/App.svelte` — main Svelte island (loads config via storage; loading state; once configured renders the translation panel plus a Settings button — a corner gear icon in embed mode, which also makes the panel compact; opens the setup modal — blocking while unconfigured, via Settings once configured)
-- `src/components/TranslatePanel.svelte` — translation panel: pair indicator, textarea (Enter submits, Shift+Enter newline), Translate/clear buttons, live result area (translation with `PL → EN` direction, notice, error) and Copy with an iframe-safe fallback; animates direction changes through View Transitions with reduced-motion and staleness guards; answers the R'lyehian chant locally with finite eldritch styling; resets on saved settings; `compact` prop for embed (full width, label as a themed placeholder, 2 rows)
+- `src/styles/theme.css` — shared light/dark colour tokens (teal accent, accent-soft chip, logo tile) and system UI font; follows the system scheme in the page, panel and modal; components use these tokens
+- `public/two-way-icon.svg` — the logo (shown on a dark tile: its light arrow vanishes on light backgrounds); `public/favicon.svg` / `favicon.ico` — the logo on a dark rounded tile
+- `src/components/App.svelte` — main Svelte island (loads config via storage; loading state; centred column under a logo-and-title `<h1>`, both dropped in embed by CSS; once configured renders the translation panel; opens the setup modal — blocking while unconfigured, via the panel's Settings button once configured)
+- `src/components/TranslatePanel.svelte` — translation panel: one input bar (pair chip, auto-growing textarea labelled by its placeholder — Enter submits, Shift+Enter newline, 1–6 rows, re-measured on width changes —, clear, Settings icon via the `onsettings` prop, logo Translate button; wraps the input onto its own row below 360 px), live result card (translation with `PL → EN` direction, notice, error) and Copy with an iframe-safe fallback; animates direction changes through View Transitions with reduced-motion and staleness guards; answers the R'lyehian chant locally with finite eldritch styling; resets on saved settings; same markup in both layouts
 - `src/lib/types.ts` — `AppConfig` / `StoredRecord` shapes (provider + unordered language pair)
 - `src/lib/storage.ts` — all IndexedDB access behind a small async API (`createStorage()`; in-memory fallback + `inmemoryFallback` signal)
 - `src/lib/storage.test.ts` — storage unit tests (fake-indexeddb; fallback via stubbed global)
@@ -48,7 +49,7 @@ Config lives in IndexedDB (`two-way.` name prefix), raw IDB API first — no `id
 The page runs inside a plain iframe on start.me or as a standalone page.
 
 - Never introduce headers/CSP (`X-Frame-Options`, `frame-ancestors`) that block framing.
-- Embed mode is `?embed=1` **or** any framing, marked by `data-embed` on `<html>` (set by the inline head script — the single source of truth; CSS keys on `:root[data-embed]`, App reads the attribute in `onMount`). It hides the title, uses a compact layout and shrinks Settings to a gear icon.
+- Embed mode is `?embed=1` **or** any framing, marked by `data-embed` on `<html>` (set by the inline head script — the single source of truth; CSS keys on `:root[data-embed]`; no component reads it). It hides the logo-and-title header, drops the column cap and uses a small inset; the panel itself is identical in both layouts.
 - Verify changes in an iframe context, not just top-level browsing.
 
 ## Code style

@@ -8,11 +8,11 @@
   interface Props {
     /** The saved config every translation uses; a new object means settings were saved. */
     config: AppConfig;
-    /** Embed layout: full width, label shown as a placeholder, a shorter input (embed-mode D4). */
-    compact?: boolean;
+    /** Opens the setup modal from the bar's Settings button. */
+    onsettings: () => void;
   }
 
-  let { config, compact = false }: Props = $props();
+  let { config, onsettings }: Props = $props();
 
   type CopyState = 'idle' | 'copied' | 'manual';
 
@@ -31,7 +31,17 @@
   const pair = $derived(pairLabel(config.pair));
 
   onMount(() => {
+    // Rewrapped text needs a new height without any input; height changes are fitInput's own, so skip them (redesign D3).
+    let width = inputEl.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (inputEl.clientWidth !== width) {
+        width = inputEl.clientWidth;
+        fitInput();
+      }
+    });
+    observer.observe(inputEl);
     return () => {
+      observer.disconnect();
       translator.cancel();
       clearTimeout(copyTimer);
     };
@@ -42,6 +52,17 @@
     void config;
     untrack(reset);
   });
+
+  $effect(() => {
+    void input;
+    fitInput();
+  });
+
+  /** Sizes the input to its content; resetting to `auto` first lets it shrink. CSS bounds it to one to six rows (redesign D3). */
+  function fitInput(): void {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = `${inputEl.scrollHeight}px`;
+  }
 
   /**
    * Replaces the result area's content; any copy confirmation belonged to the old view.
@@ -181,12 +202,7 @@
   }
 </script>
 
-<section class="panel" class:compact aria-label="Translator">
-  <p class="pair" title={pair.name}>
-    <span aria-hidden="true">{pair.text}</span>
-    <span class="visually-hidden">{pair.name}</span>
-  </p>
-
+<section class="panel" aria-label="Translator">
   <form
     bind:this={form}
     onsubmit={(event) => {
@@ -194,12 +210,16 @@
       void handleSubmit();
     }}
   >
-    <label for="translate-input" class:visually-hidden={compact}>Text to translate</label>
-    <div class="input-row">
+    <div class="bar">
+      <p class="pair" title={pair.name}>
+        <span aria-hidden="true">{pair.text}</span>
+        <span class="visually-hidden">{pair.name}</span>
+      </p>
+      <label for="translate-input" class="visually-hidden">Text to translate</label>
       <textarea
         id="translate-input"
-        rows={compact ? 2 : 3}
-        placeholder={compact ? 'Text to translate' : undefined}
+        rows="1"
+        placeholder="Text to translate"
         autocomplete="off"
         spellcheck="false"
         bind:this={inputEl}
@@ -207,36 +227,48 @@
         onkeydown={handleKeydown}
       ></textarea>
       {#if input}
-        <button type="button" class="clear" aria-label="Clear text" onclick={clearInput}>×</button>
+        <button type="button" class="icon clear" aria-label="Clear text" title="Clear text" onclick={clearInput}>×</button>
       {/if}
-    </div>
-    <div class="actions">
-      <button type="submit">Translate</button>
+      <button type="button" class="icon" aria-label="Settings" title="Settings" onclick={onsettings}>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.03 7.03 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 0 0-.61.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.07 7.07 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.3.61.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.48 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"
+          />
+        </svg>
+      </button>
+      <button type="submit" class="go" aria-label="Translate" title="Translate">
+        <img src="/two-way-icon.svg" alt="" width="28" height="28" />
+      </button>
     </div>
   </form>
 
   <!-- Always rendered: screen readers often ignore a live region inserted together with its text. -->
   <div class="result" role="status">
-    {#if view.kind === 'translating'}
-      <p class="muted">Translating…</p>
-    {:else if view.kind === 'translation'}
-      <p class="direction" title={view.direction.name}>
-        <span aria-hidden="true">{view.direction.text}</span>
-        <span class="visually-hidden">{view.direction.name}</span>
-      </p>
-      <p class="translation" class:eldritch={view.eldritch} lang={view.lang} bind:this={translationEl}>{view.text}</p>
-      <div class="actions">
-        <button type="button" onclick={() => void copyTranslation()}>
-          {copyState === 'copied' ? 'Copied' : 'Copy'}
-        </button>
+    {#if view.kind !== 'idle'}
+      <div class="card" class:is-error={view.kind === 'error'}>
+        {#if view.kind === 'translating'}
+          <p class="muted">Translating…</p>
+        {:else if view.kind === 'translation'}
+          <p class="direction" title={view.direction.name}>
+            <span aria-hidden="true">{view.direction.text}</span>
+            <span class="visually-hidden">{view.direction.name}</span>
+          </p>
+          <p class="translation" class:eldritch={view.eldritch} lang={view.lang} bind:this={translationEl}>{view.text}</p>
+          <div class="actions">
+            <button type="button" class="copy" onclick={() => void copyTranslation()}>
+              {copyState === 'copied' ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          {#if copyState === 'manual'}
+            <p class="muted">Press Ctrl+C (⌘C on Mac) to copy.</p>
+          {/if}
+        {:else if view.kind === 'notice'}
+          <p>{view.message}</p>
+        {:else if view.kind === 'error'}
+          <p class="error">{view.message}</p>
+        {/if}
       </div>
-      {#if copyState === 'manual'}
-        <p class="muted">Press Ctrl+C (⌘C on Mac) to copy.</p>
-      {/if}
-    {:else if view.kind === 'notice'}
-      <p>{view.message}</p>
-    {:else if view.kind === 'error'}
-      <p class="error">{view.message}</p>
     {/if}
   </div>
 </section>
@@ -246,25 +278,46 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-width: 300px;
-  }
-  .panel.compact {
-    max-width: none;
-  }
-  /* Room for App's corner Settings gear, which is shown only in the compact layout. */
-  .compact .pair {
-    padding-right: 32px;
+    container-type: inline-size;
   }
   p {
     margin: 0;
   }
+  /* Rows are 32 px: the buttons' size, and the textarea's 22 px line plus 5 px padding each side. */
+  .bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: 21px;
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  }
+  .bar:has(textarea:focus) {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+  .pair {
+    align-self: flex-start;
+    flex: none;
+    margin: 4px 0 4px 2px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--color-accent-soft);
+    color: var(--color-accent-soft-text);
+    font-size: 0.8rem;
+    line-height: 18px;
+    white-space: nowrap;
+  }
   .pair,
   .direction {
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
   .direction {
+    color: var(--color-muted);
+    font-size: 0.8rem;
     view-transition-name: direction;
   }
   :global(::view-transition-old(root)),
@@ -282,60 +335,109 @@
       transform: rotateX(0deg);
     }
   }
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  label {
-    font-size: 0.85rem;
-  }
-  textarea,
-  button {
-    font: inherit;
-    padding: 6px 8px;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    background: var(--color-surface);
-    color: inherit;
-  }
   textarea {
     flex: 1;
     min-width: 0;
-    resize: vertical;
+    box-sizing: border-box;
+    /* The minimum covers a measurement taken before layout, which reads 0 (redesign D3). */
+    min-height: calc(1lh + 10px);
+    max-height: calc(6lh + 10px);
+    padding: 5px 4px;
+    border: none;
+    outline: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: 22px;
+    resize: none;
+    overflow-y: auto;
   }
   textarea::placeholder {
     color: var(--color-muted);
     opacity: 1;
   }
-  .input-row {
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-  }
-  .clear {
-    padding: 4px 8px;
-    line-height: 1;
-  }
-  .actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 4px;
-  }
   button {
+    font: inherit;
+    color: inherit;
     cursor: pointer;
   }
-  button[type='submit'] {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-    color: var(--color-on-accent);
+  button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
-  .result {
+  .icon,
+  .go {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+  }
+  .icon {
+    background: none;
+    color: var(--color-muted);
+  }
+  .icon:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-soft-text);
+  }
+  .clear {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  /* Too narrow for the chip and three buttons beside a usable input: the input takes its own row (redesign D11). */
+  @container (width < 360px) {
+    .bar {
+      flex-wrap: wrap;
+    }
+    textarea {
+      order: -1;
+      flex-basis: 100%;
+    }
+    .pair {
+      align-self: center;
+      margin-right: auto;
+    }
+  }
+  /* With the bar's 6 px gap, keeps 10 px between Settings and Translate against misclicks. */
+  .go {
+    margin-left: 4px;
+    background: var(--color-logo-tile);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  }
+  .go:hover {
+    filter: brightness(1.25);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .go {
+      transition: transform 120ms ease-out;
+    }
+    .go:hover {
+      transform: scale(1.06);
+    }
+    .go:active {
+      transform: scale(0.94);
+    }
+  }
+  .card {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+    padding: 10px 12px;
+    border-left: 3px solid transparent;
+    border-radius: 12px;
+    background: var(--color-surface);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+  }
+  .card.is-error {
+    border-left-color: var(--color-error);
   }
   .translation {
+    font-size: 1.05rem;
+    line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
@@ -353,6 +455,17 @@
     .translation.eldritch {
       animation: none;
     }
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .copy {
+    padding: 3px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-surface);
+    font-size: 0.85rem;
   }
   .muted {
     color: var(--color-muted);
