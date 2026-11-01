@@ -63,8 +63,8 @@ Confirmed: start.me's Embed Content widget is a **plain iframe** (their docs say
   third-party context. Chrome/Edge partition IDB per embedding site (config persists,
   but only within start.me). Safari/Brave may block IDB entirely → setup modal on every
   visit. Fallback plan: session-only key when storage throws. Test early in Safari-in-iframe.
-- Compact layout for small widget box; vertical setup with max width 300 px
-- Support `?embed=1` mode hiding settings chrome.
+- Compact layout for small widget box: one command-bar input (pair chip, input, Settings gear, logo Translate button) that fills the frame's width.
+- Support `?embed=1` mode hiding the logo-and-title header.
 - Optional bonus: tiny `postMessage` API so host pages can prefill text / read results.
 
 ## Prompt design notes
